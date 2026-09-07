@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "Bloom Budget",
+    "slug": "bloom-budget",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/splash.png",
+    "userInterfaceStyle": "light",
+    "platforms": ["ios", "android", "web"],
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#fcf8ff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.bloom.budget"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#fcf8ff"
+      },
+      "package": "com.bloom.budget"
+    },
+    "plugins": []
+  }
+}

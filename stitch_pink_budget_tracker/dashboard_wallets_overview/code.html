@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dashboard &amp; Wallets Overview</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "primary-container": "#de245b",
+            "on-secondary-fixed-variant": "#8c1038",
+            "secondary-fixed-dim": "#ffb2bd",
+            "on-secondary": "#ffffff",
+            "surface-container-low": "#f6f2fc",
+            "background": "#fcf8ff",
+            "on-primary-fixed-variant": "#910034",
+            "surface-container-lowest": "#ffffff",
+            "on-error-container": "#93000a",
+            "secondary": "#ad2c4f",
+            "outline": "#8f6f73",
+            "surface-container-high": "#ebe6f1",
+            "on-primary": "#ffffff",
+            "error-container": "#ffdad6",
+            "secondary-container": "#fd6989",
+            "surface-container-highest": "#e5e1eb",
+            "error": "#ba1a1a",
+            "on-tertiary-fixed": "#002113",
+            "tertiary": "#006947",
+            "primary": "#b80045",
+            "on-background": "#1c1b22",
+            "on-tertiary-container": "#f5fff6",
+            "primary-fixed-dim": "#ffb2bc",
+            "outline-variant": "#e3bdc1",
+            "surface-bright": "#fcf8ff",
+            "secondary-fixed": "#ffd9dd",
+            "on-secondary-container": "#6b0027",
+            "on-primary-fixed": "#400012",
+            "surface-tint": "#bd0047",
+            "inverse-surface": "#312f37",
+            "tertiary-fixed-dim": "#4edea3",
+            "primary-fixed": "#ffd9dd",
+            "tertiary-container": "#00855b",
+            "tertiary-fixed": "#6ffbbe",
+            "on-error": "#ffffff",
+            "on-surface-variant": "#5b4043",
+            "on-secondary-fixed": "#400014",
+            "surface-dim": "#ddd8e3",
+            "on-surface": "#1c1b22",
+            "on-primary-container": "#fffbff",
+            "inverse-primary": "#ffb2bc",
+            "on-tertiary-fixed-variant": "#005236",
+            "surface-container": "#f1ecf6",
+            "surface": "#fcf8ff",
+            "surface-variant": "#e5e1eb",
+            "inverse-on-surface": "#f4eff9",
+            "on-tertiary": "#ffffff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-sm": "0.75rem",
+            "margin-tablet": "2rem",
+            "gutter-tablet": "1.5rem",
+            "space-xl": "1.5rem",
+            "gutter-mobile": "1rem",
+            "space-2xl": "2rem",
+            "space-lg": "1.25rem",
+            "space-3xl": "2.5rem",
+            "space-xs": "0.5rem",
+            "space-md": "1rem",
+            "margin-mobile": "1.25rem",
+            "space-2xs": "0.25rem"
+          },
+          "fontFamily": {
+            "label-card": ["JetBrains Mono"],
+            "display-lg-mobile": ["Plus Jakarta Sans"],
+            "label-pill": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "display-lg": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "headline-sm": ["Plus Jakarta Sans"],
+            "label-numeric": ["JetBrains Mono"]
+          },
+          "fontSize": {
+            "label-card": ["12px", { "lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "500" }],
+            "display-lg-mobile": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+            "label-pill": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "700" }],
+            "headline-lg": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "headline-md": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+            "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+            "headline-sm": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "label-numeric": ["15px", { "lineHeight": "20px", "letterSpacing": "-0.02em", "fontWeight": "500" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .card-glow {
+      box-shadow: 0 12px 32px -4px rgba(255, 64, 113, 0.14), 0 4px 10px -2px rgba(18, 17, 24, 0.03);
+    }
+    .card-glow-subtle {
+      box-shadow: 0 4px 20px -2px rgba(255, 64, 113, 0.06), 0 1px 3px 0 rgba(18, 17, 24, 0.03);
+    }
+    .floating-fab-glow {
+      box-shadow: 0 10px 25px -3px rgba(184, 0, 69, 0.4), 0 4px 10px -2px rgba(184, 0, 69, 0.2);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface antialiased selection:bg-secondary-fixed selection:text-on-secondary-fixed-variant min-h-screen flex justify-center pb-28">
+<!-- Mobile Viewport Container -->
+<main class="w-full max-w-[480px] min-h-screen bg-surface flex flex-col relative overflow-x-hidden">
+<!-- TopAppBar (Anchored Shared Component via JSON) -->
+<header class="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-margin-mobile h-16 max-w-[480px] mx-auto bg-surface/80 backdrop-blur-md shadow-sm">
+<div class="flex items-center gap-space-sm">
+<div class="relative w-10 h-10 rounded-full ring-2 ring-outline-variant/50 overflow-hidden bg-surface-container-high flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A refined portrait of a stylish young woman named Sarah with warm natural ambient studio lighting, soft neutral background, wearing an elegant blush pink minimalist sweater with soft confident smile in a modern editorial style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuASl-x-2j1n8w9a5yyMCcR0P8IYhwdjVQcaY-AIjQF7Z714IBaUPUoYK0UqM6V1L0fp-LTyluK8MGs3D11t1hK201sVnIM40UX_sWTIkeo3p-WTAw2utr2VsWkK-LkuCLfxsQwfFy1ecyytTpp4hG3t-mX8aR9kEH_YC2o8mN3UcDd8x0hvUMrhibSp_AdGtBFH8S8MnF1RA1uU7q6vYNAtM_7azmaP7Cl0MwoLYipm9WbPLu_2CAjLeA"/>
+</div>
+<div class="flex flex-col">
+<span class="text-label-pill font-label-pill text-on-surface-variant leading-none">Welcome back</span>
+<h1 class="text-headline-sm font-headline-sm font-bold text-on-surface">Hey, Sarah ✨</h1>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+<!-- Quick Mode Indicator Pill -->
+<button aria-label="Toggle theme mode" class="w-9 h-9 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors active:scale-95" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="light_mode">light_mode</span>
+</button>
+<!-- Notification Bell Icon (as specified by Shared JSON) -->
+<button aria-label="Notifications" class="w-9 h-9 rounded-full bg-surface-container-low flex items-center justify-center text-primary hover:bg-surface-container-high transition-colors relative active:scale-95" type="button">
+<span class="material-symbols-outlined text-[22px]" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-primary ring-2 ring-surface"></span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas (Padding top for fixed top app bar) -->
+<div class="pt-20 px-margin-mobile flex flex-col gap-space-xl">
+<!-- Section: Net Worth / Total Balance Card -->
+<section class="relative rounded-3xl p-6 overflow-hidden card-glow border border-outline-variant/30 bg-gradient-to-br from-white via-surface-bright to-secondary-fixed/40">
+<!-- Ambient Decorative Rose Orb -->
+<div class="absolute -right-12 -top-12 w-40 h-40 rounded-full bg-secondary-container/20 blur-2xl pointer-events-none"></div>
+<div class="flex items-center justify-between mb-2">
+<span class="text-label-pill font-label-pill text-on-surface-variant uppercase tracking-wider">Total Net Worth</span>
+<span class="inline-flex items-center gap-1 text-label-pill font-label-pill text-tertiary font-bold bg-tertiary-fixed/60 px-2.5 py-0.5 rounded-full">
+<span class="material-symbols-outlined text-[14px]" data-icon="trending_up">trending_up</span>
+            +8.4% this mo
+          </span>
+</div>
+<div class="flex items-baseline gap-1 my-1">
+<span class="text-body-lg font-body-lg text-primary font-semibold">$</span>
+<span class="text-display-lg-mobile font-display-lg-mobile text-on-surface tracking-tight">14,850.20</span>
+</div>
+<!-- Monthly Summary Pills Split -->
+<div class="grid grid-cols-2 gap-3 mt-5 pt-4 border-t border-outline-variant/30">
+<!-- Income Pill -->
+<div class="flex items-center gap-2.5 p-2.5 rounded-2xl bg-surface-container-lowest/80 border border-outline-variant/20">
+<div class="w-8 h-8 rounded-full bg-tertiary-container/15 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[18px]" data-icon="arrow_downward">arrow_downward</span>
+</div>
+<div class="flex flex-col">
+<span class="text-label-pill font-label-pill text-on-surface-variant">Income</span>
+<span class="text-label-numeric font-label-numeric text-tertiary font-semibold">+$5,240.00</span>
+</div>
+</div>
+<!-- Expense Pill -->
+<div class="flex items-center gap-2.5 p-2.5 rounded-2xl bg-surface-container-lowest/80 border border-outline-variant/20">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]" data-icon="arrow_upward">arrow_upward</span>
+</div>
+<div class="flex flex-col">
+<span class="text-label-pill font-label-pill text-on-surface-variant">Expenses</span>
+<span class="text-label-numeric font-label-numeric text-primary font-semibold">-$2,180.50</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: My Wallets & Cards Header -->
+<section class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<h2 class="text-headline-sm font-headline-sm font-bold text-on-surface">My Wallets &amp; Cards</h2>
+<span class="text-label-pill font-label-pill bg-primary-fixed text-on-primary-fixed-variant px-2 py-0.5 rounded-full font-bold">4 Active</span>
+</div>
+<button class="inline-flex items-center gap-1 text-label-pill font-label-pill text-primary font-bold hover:text-primary-container transition-colors py-1 px-2 rounded-full hover:bg-primary-fixed/40 active:scale-95" type="button">
+<span class="material-symbols-outlined text-[16px]" data-icon="add">add</span>
+            Add Card
+          </button>
+</div>
+<!-- Horizontal Cards Carousel -->
+<div class="flex gap-4 overflow-x-auto no-scrollbar pb-3 pt-1 -mx-margin-mobile px-margin-mobile snap-x snap-mandatory">
+<!-- Card 1: Primary Chase Sapphire (Deep Rose Luxury Gradient) -->
+<div class="snap-start shrink-0 w-[270px] h-[168px] rounded-3xl p-4 flex flex-col justify-between relative overflow-hidden text-white shadow-lg bg-gradient-to-br from-primary via-primary-container to-secondary" style="box-shadow: 0 10px 24px -4px rgba(184, 0, 69, 0.35);">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[24px] text-primary-fixed" data-icon="contactless">contactless</span>
+<span class="text-label-card font-label-card tracking-wider font-semibold text-primary-fixed">CHASE SAPPHIRE</span>
+</div>
+<button aria-label="Edit card" class="w-7 h-7 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/30 transition-all" type="button">
+<span class="material-symbols-outlined text-[16px]" data-icon="edit">edit</span>
+</button>
+</div>
+<!-- Chip Graphic Mockup -->
+<div class="w-8 h-6 rounded-md bg-secondary-fixed/50 border border-secondary-fixed flex items-center justify-center">
+<div class="w-5 h-3 border-y border-on-secondary-fixed-variant/40"></div>
+</div>
+<div class="flex justify-between items-end">
+<div>
+<span class="text-label-card font-label-card opacity-80 block text-[10px] leading-tight">•••• 4821</span>
+<span class="text-headline-sm font-headline-sm font-bold tracking-tight text-white">$8,420.00</span>
+</div>
+<span class="text-label-pill font-label-pill bg-white/25 backdrop-blur-md px-2 py-0.5 rounded-full text-white">Primary</span>
+</div>
+</div>
+<!-- Card 2: Apple Cash / Digital Wallet (Crisp white with holographic rose border) -->
+<div class="snap-start shrink-0 w-[270px] h-[168px] rounded-3xl p-4 flex flex-col justify-between relative overflow-hidden card-glow-subtle bg-surface-container-lowest border-2 border-secondary-container/40">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[24px] text-on-surface" data-icon="phone_iphone">phone_iphone</span>
+<span class="text-label-card font-label-card tracking-wider font-semibold text-on-surface">APPLE CASH</span>
+</div>
+<span class="text-label-pill font-label-pill bg-secondary-fixed text-on-secondary-fixed-variant px-2.5 py-0.5 rounded-full font-bold">Manage</span>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px] text-tertiary" data-icon="check_circle">check_circle</span>
+<span class="text-body-sm font-body-sm">Instant Ready</span>
+</div>
+<div class="flex justify-between items-end">
+<div>
+<span class="text-label-card font-label-card text-on-surface-variant block text-[10px] leading-tight">Digital Wallet</span>
+<span class="text-headline-sm font-headline-sm font-bold tracking-tight text-on-surface">$2,310.50</span>
+</div>
+<span class="material-symbols-outlined text-[24px] text-primary" data-icon="arrow_forward_ios">arrow_forward_ios</span>
+</div>
+</div>
+<!-- Card 3: Revolut Travel Card (Soft pastel pink) -->
+<div class="snap-start shrink-0 w-[270px] h-[168px] rounded-3xl p-4 flex flex-col justify-between relative overflow-hidden card-glow-subtle bg-gradient-to-tr from-surface-container-low via-secondary-fixed/50 to-primary-fixed/40 border border-outline-variant/40">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[24px] text-primary" data-icon="flight_takeoff">flight_takeoff</span>
+<span class="text-label-card font-label-card tracking-wider font-semibold text-on-surface">REVOLUT EUR</span>
+</div>
+<span class="text-label-pill font-label-pill bg-surface-container-lowest/80 text-primary px-2.5 py-0.5 rounded-full font-bold shadow-sm">Active</span>
+</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant">Multi-Currency Hub</div>
+<div class="flex justify-between items-end">
+<div>
+<span class="text-label-card font-label-card text-on-surface-variant block text-[10px] leading-tight">•••• 9014</span>
+<span class="text-headline-sm font-headline-sm font-bold tracking-tight text-on-surface">€3,120.00</span>
+</div>
+<span class="text-label-pill font-label-pill bg-primary/10 text-primary px-2 py-0.5 rounded-full">EUR</span>
+</div>
+</div>
+<!-- Card 4: Physical Cash Envelope (Cream Blush Card) -->
+<div class="snap-start shrink-0 w-[270px] h-[168px] rounded-3xl p-4 flex flex-col justify-between relative overflow-hidden card-glow-subtle bg-surface-bright border border-outline-variant/30">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[24px] text-secondary" data-icon="payments">payments</span>
+<span class="text-label-card font-label-card tracking-wider font-semibold text-on-surface">PHYSICAL CASH</span>
+</div>
+<span class="material-symbols-outlined text-[20px] text-on-surface-variant" data-icon="lock">lock</span>
+</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant">Home Safe Vault</div>
+<div class="flex justify-between items-end">
+<div>
+<span class="text-label-card font-label-card text-on-surface-variant block text-[10px] leading-tight">Cash Stash</span>
+<span class="text-headline-sm font-headline-sm font-bold tracking-tight text-on-surface">$999.70</span>
+</div>
+<span class="text-label-pill font-label-pill bg-surface-container-high text-on-surface-variant px-2 py-0.5 rounded-full">Reserve</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Quick Action / Center Bar -->
+<section class="bg-surface-container-lowest rounded-2xl p-3 border border-outline-variant/30 card-glow-subtle flex items-center justify-between">
+<div class="flex items-center gap-3 pl-1">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed/50 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[22px]" data-icon="electric_bolt">electric_bolt</span>
+</div>
+<div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface text-sm font-bold">Quick Actions</h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Log an entry or add budget</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container-high text-on-surface text-label-pill font-label-pill transition-colors flex items-center gap-1 active:scale-95" type="button">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="receipt_long">receipt_long</span>
+            Log Expense
+          </button>
+<button aria-label="Add Wallet" class="w-9 h-9 rounded-full bg-primary text-on-primary flex items-center justify-center floating-fab-glow active:scale-95 transition-transform" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="add">add</span>
+</button>
+</div>
+</section>
+<!-- Section: Recent Transactions Feed -->
+<section class="flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<h2 class="text-headline-sm font-headline-sm font-bold text-on-surface">Recent Transactions</h2>
+<button class="text-body-sm font-body-sm text-primary font-semibold hover:underline" type="button">View All</button>
+</div>
+<!-- Group: Today -->
+<div class="flex flex-col gap-2.5">
+<span class="text-label-pill font-label-pill text-outline font-bold tracking-wider">TODAY</span>
+<!-- Item 1: Whole Foods -->
+<div class="h-[68px] bg-surface-container-lowest rounded-2xl p-3 flex items-center justify-between border border-outline-variant/20 hover:border-outline-variant/50 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-2xl bg-secondary-fixed/50 flex items-center justify-center text-secondary flex-shrink-0">
+<span class="material-symbols-outlined text-[22px]" data-icon="shopping_basket">shopping_basket</span>
+</div>
+<div class="flex flex-col">
+<span class="text-headline-sm font-headline-sm text-sm font-semibold text-on-surface">Whole Foods Market</span>
+<div class="flex items-center gap-1.5 text-body-sm font-body-sm text-on-surface-variant">
+<span>Groceries</span>
+<span>•</span>
+<span class="inline-flex items-center gap-1 text-[11px] text-primary bg-primary-fixed/40 px-1.5 py-0.2 rounded">Chase</span>
+</div>
+</div>
+</div>
+<div class="text-right">
+<span class="text-label-numeric font-label-numeric font-semibold text-on-surface">-$84.20</span>
+<span class="block text-body-sm font-body-sm text-on-surface-variant text-[11px]">11:42 AM</span>
+</div>
+</div>
+<!-- Item 2: Salary Deposit -->
+<div class="h-[68px] bg-surface-container-lowest rounded-2xl p-3 flex items-center justify-between border border-outline-variant/20 hover:border-outline-variant/50 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-2xl bg-tertiary-fixed/60 flex items-center justify-center text-tertiary flex-shrink-0">
+<span class="material-symbols-outlined text-[22px]" data-icon="account_balance">account_balance</span>
+</div>
+<div class="flex flex-col">
+<span class="text-headline-sm font-headline-sm text-sm font-semibold text-on-surface">Salary Deposit</span>
+<div class="flex items-center gap-1.5 text-body-sm font-body-sm text-on-surface-variant">
+<span>Payroll Direct</span>
+<span>•</span>
+<span class="inline-flex items-center gap-1 text-[11px] text-primary bg-primary-fixed/40 px-1.5 py-0.2 rounded">Chase</span>
+</div>
+</div>
+</div>
+<div class="text-right">
+<span class="text-label-numeric font-label-numeric font-semibold text-tertiary">+$2,620.00</span>
+<span class="block text-body-sm font-body-sm text-on-surface-variant text-[11px]">09:00 AM</span>
+</div>
+</div>
+<!-- Item 3: Matcha Latte -->
+<div class="h-[68px] bg-surface-container-lowest rounded-2xl p-3 flex items-center justify-between border border-outline-variant/20 hover:border-outline-variant/50 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-2xl bg-surface-container flex items-center justify-center text-secondary flex-shrink-0">
+<span class="material-symbols-outlined text-[22px]" data-icon="local_cafe">local_cafe</span>
+</div>
+<div class="flex flex-col">
+<span class="text-headline-sm font-headline-sm text-sm font-semibold text-on-surface">Matcha Botanicals</span>
+<div class="flex items-center gap-1.5 text-body-sm font-body-sm text-on-surface-variant">
+<span>Cafe &amp; Dining</span>
+<span>•</span>
+<span class="inline-flex items-center gap-1 text-[11px] text-on-surface bg-surface-container-highest px-1.5 py-0.2 rounded">Apple Cash</span>
+</div>
+</div>
+</div>
+<div class="text-right">
+<span class="text-label-numeric font-label-numeric font-semibold text-on-surface">-$6.50</span>
+<span class="block text-body-sm font-body-sm text-on-surface-variant text-[11px]">08:15 AM</span>
+</div>
+</div>
+</div>
+<!-- Group: Yesterday -->
+<div class="flex flex-col gap-2.5 mt-1">
+<span class="text-label-pill font-label-pill text-outline font-bold tracking-wider">YESTERDAY</span>
+<!-- Item 4: Netflix -->
+<div class="h-[68px] bg-surface-container-lowest rounded-2xl p-3 flex items-center justify-between border border-outline-variant/20 hover:border-outline-variant/50 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-2xl bg-secondary-container/20 flex items-center justify-center text-primary flex-shrink-0">
+<span class="material-symbols-outlined text-[22px]" data-icon="movie">movie</span>
+</div>
+<div class="flex flex-col">
+<span class="text-headline-sm font-headline-sm text-sm font-semibold text-on-surface">Netflix Premium</span>
+<div class="flex items-center gap-1.5 text-body-sm font-body-sm text-on-surface-variant">
+<span>Subscription</span>
+<span>•</span>
+<span class="inline-flex items-center gap-1 text-[11px] text-primary bg-primary-fixed/40 px-1.5 py-0.2 rounded">Revolut</span>
+</div>
+</div>
+</div>
+<div class="text-right">
+<span class="text-label-numeric font-label-numeric font-semibold text-on-surface">-$15.99</span>
+<span class="block text-body-sm font-body-sm text-on-surface-variant text-[11px]">Yesterday</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- BottomNavBar (Shared Component JSON Blueprint & Mapping) -->
+<!-- Screen represents primary top destination 'Dashboard', so item 1 is active -->
+<nav class="fixed bottom-0 left-0 right-0 w-full z-50 flex justify-around items-center px-space-xs py-space-xs max-w-[480px] mx-auto bg-surface-container-lowest/90 backdrop-blur-xl rounded-t-xl shadow-lg border-none">
+<!-- Nav Item 1: Dashboard (ACTIVE MATCH) -->
+<button class="flex flex-col items-center justify-center bg-primary-fixed/60 text-primary rounded-full px-4 py-1.5 transition-all active:scale-95" type="button">
+<span class="material-symbols-outlined text-[22px]" data-icon="dashboard" data-weight="fill" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="text-label-pill font-label-pill mt-0.5">Dashboard</span>
+</button>
+<!-- Nav Item 2: Wallets -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1.5 hover:text-on-surface transition-colors active:scale-95 hover:bg-surface-container-high/50 rounded-full" type="button">
+<span class="material-symbols-outlined text-[22px]" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="text-label-pill font-label-pill mt-0.5">Wallets</span>
+</button>
+<!-- Nav Item 3: Analytics -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1.5 hover:text-on-surface transition-colors active:scale-95 hover:bg-surface-container-high/50 rounded-full" type="button">
+<span class="material-symbols-outlined text-[22px]" data-icon="insights">insights</span>
+<span class="text-label-pill font-label-pill mt-0.5">Analytics</span>
+</button>
+<!-- Nav Item 4: Settings -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1.5 hover:text-on-surface transition-colors active:scale-95 hover:bg-surface-container-high/50 rounded-full" type="button">
+<span class="material-symbols-outlined text-[22px]" data-icon="tune">tune</span>
+<span class="text-label-pill font-label-pill mt-0.5">Settings</span>
+</button>
+</nav>
+</main>
+</body></html>

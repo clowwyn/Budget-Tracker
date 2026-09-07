@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Budget Tracker - Midnight Dashboard</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "primary-container": "#de245b",
+            "on-secondary-fixed-variant": "#8c1038",
+            "secondary-fixed-dim": "#ffb2bd",
+            "on-secondary": "#ffffff",
+            "surface-container-low": "#f6f2fc",
+            "background": "#fcf8ff",
+            "on-primary-fixed-variant": "#910034",
+            "surface-container-lowest": "#ffffff",
+            "on-error-container": "#93000a",
+            "secondary": "#ad2c4f",
+            "outline": "#8f6f73",
+            "surface-container-high": "#ebe6f1",
+            "on-primary": "#ffffff",
+            "error-container": "#ffdad6",
+            "secondary-container": "#fd6989",
+            "surface-container-highest": "#e5e1eb",
+            "error": "#ba1a1a",
+            "on-tertiary-fixed": "#002113",
+            "tertiary": "#006947",
+            "primary": "#b80045",
+            "on-background": "#1c1b22",
+            "on-tertiary-container": "#f5fff6",
+            "primary-fixed-dim": "#ffb2bc",
+            "outline-variant": "#e3bdc1",
+            "surface-bright": "#fcf8ff",
+            "secondary-fixed": "#ffd9dd",
+            "on-secondary-container": "#6b0027",
+            "on-primary-fixed": "#400012",
+            "surface-tint": "#bd0047",
+            "inverse-surface": "#312f37",
+            "tertiary-fixed-dim": "#4edea3",
+            "primary-fixed": "#ffd9dd",
+            "tertiary-container": "#00855b",
+            "tertiary-fixed": "#6ffbbe",
+            "on-error": "#ffffff",
+            "on-surface-variant": "#5b4043",
+            "on-secondary-fixed": "#400014",
+            "surface-dim": "#ddd8e3",
+            "on-surface": "#1c1b22",
+            "on-primary-container": "#fffbff",
+            "inverse-primary": "#ffb2bc",
+            "on-tertiary-fixed-variant": "#005236",
+            "surface-container": "#f1ecf6",
+            "surface": "#fcf8ff",
+            "surface-variant": "#e5e1eb",
+            "inverse-on-surface": "#f4eff9",
+            "on-tertiary": "#ffffff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-sm": "0.75rem",
+            "margin-tablet": "2rem",
+            "gutter-tablet": "1.5rem",
+            "space-xl": "1.5rem",
+            "gutter-mobile": "1rem",
+            "space-2xl": "2rem",
+            "space-lg": "1.25rem",
+            "space-3xl": "2.5rem",
+            "space-xs": "0.5rem",
+            "space-md": "1rem",
+            "margin-mobile": "1.25rem",
+            "space-2xs": "0.25rem"
+          },
+          "fontFamily": {
+            "label-card": ["JetBrains Mono"],
+            "display-lg-mobile": ["Plus Jakarta Sans"],
+            "label-pill": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "display-lg": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "headline-sm": ["Plus Jakarta Sans"],
+            "label-numeric": ["JetBrains Mono"]
+          },
+          "fontSize": {
+            "label-card": ["12px", { "lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "500" }],
+            "display-lg-mobile": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+            "label-pill": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "700" }],
+            "headline-lg": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "headline-md": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+            "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+            "headline-sm": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "label-numeric": ["15px", { "lineHeight": "20px", "letterSpacing": "-0.02em", "fontWeight": "500" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    /* Dark Mode OLED Theme Specific Tokens & Ambient Glows */
+    body {
+      background-color: #121118;
+      color: #FFFFFF;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .neon-pink-glow {
+      box-shadow: 0 0 35px -5px rgba(255, 64, 113, 0.35), 0 0 15px -3px rgba(255, 117, 151, 0.2);
+    }
+    .neon-border-pink {
+      border: 1px solid rgba(255, 107, 139, 0.3);
+    }
+    .fab-glow {
+      box-shadow: 0 8px 24px -2px rgba(255, 64, 113, 0.65), 0 0 16px 2px rgba(255, 117, 151, 0.4);
+    }
+    .card-obsidian-mesh {
+      background: radial-gradient(circle at 100% 0%, rgba(255, 64, 113, 0.22) 0%, rgba(30, 27, 38, 0) 50%),
+                  radial-gradient(circle at 0% 100%, rgba(184, 0, 69, 0.2) 0%, rgba(18, 17, 24, 0.95) 75%),
+                  #1a1724;
+    }
+    .card-titanium-mesh {
+      background: linear-gradient(135deg, rgba(46, 42, 58, 0.8) 0%, rgba(22, 20, 30, 0.95) 100%);
+    }
+    .card-cyber-mesh {
+      background: linear-gradient(135deg, rgba(222, 36, 91, 0.8) 0%, rgba(77, 11, 38, 0.95) 100%);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-[#121118] text-white min-h-screen relative flex justify-center selection:bg-primary-container selection:text-white">
+<!-- Ambient Atmospheric Backdrops -->
+<div class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] h-96 pointer-events-none overflow-hidden z-0">
+<div class="absolute -top-24 left-1/2 -translate-x-1/2 w-[340px] h-[340px] bg-primary-container/20 rounded-full blur-[100px]"></div>
+<div class="absolute top-48 -right-20 w-[200px] h-[200px] bg-secondary-container/15 rounded-full blur-[80px]"></div>
+</div>
+<!-- Main Mobile App Shell Container (max-w-[480px]) -->
+<div class="w-full max-w-[480px] min-h-screen relative flex flex-col pb-28 pt-20 px-margin-mobile z-10">
+<!-- TopAppBar Anchor from Shared Components JSON -->
+<!-- Mapped with JSON keys: style_bg_color, style_typography, style_brand_logo, style_shell_layout, etc. -->
+<header class="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-margin-mobile h-16 max-w-[480px] mx-auto bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-md shadow-sm dark:shadow-none border-b border-white/5">
+<!-- Leading: User Profile Avatar with Online Pink Indicator -->
+<div class="flex items-center space-x-3">
+<div class="relative cursor-pointer active:scale-95 transition-transform duration-150">
+<div class="w-10 h-10 rounded-full overflow-hidden p-0.5 bg-gradient-to-tr from-primary via-secondary-container to-primary-fixed-dim">
+<img class="w-full h-full object-cover rounded-full" data-alt="A close up editorial portrait of Sarah, a stylish woman with modern sleek dark hair and sophisticated aesthetic. The background is dim obsidian studio lighting with cinematic neon magenta rim light accentuating her chic appearance. Warm tactile minimalist luxury vibe." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjlJPxxe4sFhVEOT7VA8_pjxcVXGny-g4g2JYQBKPazbdVl2UKDcpYN4gqKjIejr4fO_52QRXVbANTUpGTg33cW9rB84Y1Jm6F3KuXmknOTToFYOS-ksqhZyrirJ5FfCXXM1V22VVPOy8n_SmodL1u1QXUvJ9QmEZJR_aXMsUhajxeFspJGGUO9vlJ0YnBURDB00jYf5oU_SN82e2IPtI2cL2OVqulYsDTrDKfyxyys-v_8u4rdLc30A"/>
+</div>
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-tertiary-fixed-dim rounded-full ring-2 ring-[#121118]"></span>
+</div>
+<div class="flex flex-col">
+<span class="text-on-surface-variant dark:text-outline-variant font-body-sm text-body-sm text-[#9b94a8]">Welcome back,</span>
+<span class="font-headline-sm text-headline-sm font-bold text-white tracking-tight flex items-center gap-1.5">
+            Sarah
+            <span class="w-1.5 h-1.5 rounded-full bg-secondary-container animate-pulse"></span>
+</span>
+</div>
+</div>
+<!-- Center / Right Actions: Dark Mode Pill & Notifications -->
+<div class="flex items-center space-x-2">
+<!-- 'Dark Mode: ON' Badge with Glowing Moon Pill -->
+<div class="flex items-center space-x-1.5 bg-[#262232]/80 border border-primary/30 rounded-full px-2.5 py-1 text-primary-fixed-dim backdrop-blur-md shadow-inner">
+<span class="material-symbols-outlined text-sm text-[#FF7597]" style="font-variation-settings: 'FILL' 1;">dark_mode</span>
+<span class="font-label-pill text-label-pill uppercase text-[#FF7597] tracking-wider">OLED</span>
+<div class="w-2 h-2 rounded-full bg-[#FF4071] shadow-[0_0_8px_#FF4071]"></div>
+</div>
+<!-- Trailing Action: Notification Icon -->
+<button aria-label="Notifications" class="relative p-2 rounded-full text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-high/40 dark:hover:bg-surface-container-highest/20 transition-colors active:scale-95 transition-transform duration-150 text-white/80">
+<span class="material-symbols-outlined text-[22px]">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full ring-2 ring-[#121118]"></span>
+</button>
+</div>
+</header>
+<!-- Content Canvas Area -->
+<main class="w-full flex flex-col space-y-space-xl mt-2">
+<!-- Section: Macro High-Contrast Net Worth Card -->
+<section class="w-full">
+<div class="relative overflow-hidden rounded-[24px] p-space-lg bg-[#1E1B26]/90 border border-primary/25 backdrop-blur-xl neon-pink-glow">
+<!-- Glass Reflective Specular Light -->
+<div class="absolute -top-12 -right-12 w-36 h-36 bg-gradient-to-br from-primary-container/30 to-transparent rounded-full blur-2xl pointer-events-none"></div>
+<div class="flex justify-between items-start mb-space-sm relative z-10">
+<div>
+<div class="flex items-center space-x-2">
+<span class="font-label-pill text-label-pill text-[#B7ADC4] uppercase tracking-wider">Total Net Worth</span>
+<span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-label-pill bg-tertiary-container/30 text-tertiary-fixed border border-tertiary/40">
+                  +4.8%
+                </span>
+</div>
+<div class="mt-1 flex items-baseline space-x-1">
+<span class="font-label-card text-label-card text-primary-fixed-dim opacity-70">$</span>
+<span class="font-display-lg-mobile text-display-lg-mobile font-bold tracking-tight text-white drop-shadow-[0_2px_12px_rgba(255,255,255,0.15)]">14,850.20</span>
+</div>
+</div>
+<!-- Currency/Sync Status Pill -->
+<button class="p-2 rounded-full bg-white/5 border border-white/10 hover:border-primary/40 text-[#c7bece] active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</div>
+<!-- Cashflow Tags with Illuminated Emerald and Rose Pills -->
+<div class="grid grid-cols-2 gap-space-xs mt-4 pt-3.5 border-t border-white/10 relative z-10">
+<!-- Monthly Inflow -->
+<div class="flex items-center space-x-2.5 p-2 rounded-xl bg-[#262232]/80 border border-tertiary/30">
+<div class="w-7 h-7 rounded-lg bg-tertiary-container/30 flex items-center justify-center text-tertiary-fixed shadow-[0_0_10px_rgba(78,222,163,0.3)]">
+<span class="material-symbols-outlined text-base">arrow_downward</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-[#A8A1B4] text-[11px] leading-tight">Cash Inflow</span>
+<span class="font-label-numeric text-label-numeric text-tertiary-fixed-dim font-semibold text-xs mt-0.5">+$6,420.00</span>
+</div>
+</div>
+<!-- Monthly Outflow -->
+<div class="flex items-center space-x-2.5 p-2 rounded-xl bg-[#262232]/80 border border-primary/30">
+<div class="w-7 h-7 rounded-lg bg-primary-container/30 flex items-center justify-center text-secondary-fixed-dim shadow-[0_0_10px_rgba(255,64,113,0.35)]">
+<span class="material-symbols-outlined text-base">arrow_upward</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-[#A8A1B4] text-[11px] leading-tight">Expenses</span>
+<span class="font-label-numeric text-label-numeric text-[#FF7597] font-semibold text-xs mt-0.5">-$2,145.80</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Wallet Carousel in Dark Mode -->
+<section class="w-full">
+<div class="flex justify-between items-center mb-3">
+<div class="flex items-center space-x-2">
+<h2 class="font-headline-sm text-headline-sm font-semibold text-white">Active Wallets</h2>
+<span class="px-2 py-0.5 rounded-full text-xs font-label-pill bg-[#262232] text-primary-fixed-dim border border-primary/20">3</span>
+</div>
+<button class="font-body-sm text-body-sm text-primary-fixed-dim hover:text-white flex items-center transition-colors">
+            Manage <span class="material-symbols-outlined text-sm ml-0.5">arrow_forward</span>
+</button>
+</div>
+<!-- Horizontal Scrollable Cards Strip -->
+<div class="flex space-x-space-md overflow-x-auto no-scrollbar pb-2 pt-1 -mx-margin-mobile px-margin-mobile snap-x snap-mandatory">
+<!-- Card 1: Chase Sapphire Obsidian Edition -->
+<div class="snap-center shrink-0 w-[275px] h-[174px] rounded-[22px] p-space-md flex flex-col justify-between relative overflow-hidden card-obsidian-mesh border border-primary/40 shadow-[0_8px_26px_-4px_rgba(255,64,113,0.25)]">
+<!-- Neon Edge Lighting Glow Strip -->
+<div class="absolute top-0 right-0 left-0 h-[2px] bg-gradient-to-r from-transparent via-[#FF4071] to-transparent opacity-80"></div>
+<div class="flex justify-between items-start relative z-10">
+<div class="flex items-center space-x-1.5">
+<span class="material-symbols-outlined text-primary-fixed-dim text-lg">diamond</span>
+<span class="font-label-card text-label-card tracking-wider font-semibold text-white/90">SAPPHIRE RESERVE</span>
+</div>
+<span class="material-symbols-outlined text-white/40 text-2xl">contactless</span>
+</div>
+<div class="relative z-10 my-auto">
+<div class="flex items-center space-x-2">
+<span class="text-white/60 tracking-widest text-xs">••••</span>
+<span class="text-white/60 tracking-widest text-xs">••••</span>
+<span class="text-white/60 tracking-widest text-xs">••••</span>
+<span class="font-label-card text-label-card text-white font-bold tracking-widest text-sm">8842</span>
+</div>
+</div>
+<div class="flex justify-between items-end relative z-10">
+<div>
+<span class="block text-[10px] font-label-pill uppercase text-white/50 tracking-wider">Balance</span>
+<span class="font-label-numeric text-label-numeric font-bold text-white text-base">$8,450.50</span>
+</div>
+<div class="text-right">
+<span class="block text-[9px] font-label-pill uppercase text-[#FF7597] tracking-widest font-bold">OBSIDIAN</span>
+<span class="font-label-card text-label-card text-white/60 text-[11px]">EXP 09/28</span>
+</div>
+</div>
+</div>
+<!-- Card 2: Apple Cash Dark Titanium Card -->
+<div class="snap-center shrink-0 w-[275px] h-[174px] rounded-[22px] p-space-md flex flex-col justify-between relative overflow-hidden card-titanium-mesh border border-white/15 shadow-[0_8px_24px_-4px_rgba(0,0,0,0.5)]">
+<div class="absolute -right-8 -bottom-8 w-28 h-28 bg-primary/20 rounded-full blur-xl pointer-events-none"></div>
+<div class="flex justify-between items-start relative z-10">
+<div class="flex items-center space-x-1.5">
+<span class="material-symbols-outlined text-white text-xl">token</span>
+<span class="font-headline-sm text-headline-sm text-sm font-semibold tracking-wide text-white">Apple Cash</span>
+</div>
+<!-- Holographic Pink Accent Badge -->
+<span class="px-2 py-0.5 rounded-full text-[10px] font-label-pill bg-gradient-to-r from-primary-container/40 to-secondary-container/40 text-primary-fixed border border-[#FF7597]/40 shadow-[0_0_8px_rgba(255,64,113,0.3)]">
+                TITANIUM
+              </span>
+</div>
+<div class="relative z-10">
+<span class="block text-[10px] font-label-pill uppercase text-[#A8A1B4] tracking-wider">Available Funds</span>
+<span class="font-label-numeric text-label-numeric font-bold text-white text-xl tracking-tight">$3,240.70</span>
+</div>
+<div class="flex justify-between items-center relative z-10 pt-1 border-t border-white/10">
+<span class="font-label-card text-label-card text-white/50 text-[11px]">Sarah Jenkins</span>
+<div class="flex items-center space-x-1 text-tertiary-fixed-dim text-xs font-label-pill">
+<span class="material-symbols-outlined text-xs">bolt</span>
+<span>Instant Transfer</span>
+</div>
+</div>
+</div>
+<!-- Card 3: Revolut Cyber Pink Gradient Card -->
+<div class="snap-center shrink-0 w-[275px] h-[174px] rounded-[22px] p-space-md flex flex-col justify-between relative overflow-hidden card-cyber-mesh border border-[#FF7597]/40 shadow-[0_10px_28px_-3px_rgba(222,36,91,0.4)]">
+<div class="flex justify-between items-start relative z-10">
+<div class="flex items-center space-x-1.5">
+<span class="font-headline-md text-headline-md font-extrabold text-white text-base tracking-tighter">Revolut</span>
+<span class="px-1.5 py-0.5 rounded text-[9px] font-label-pill bg-black/40 text-white border border-white/20">CYBER</span>
+</div>
+<span class="material-symbols-outlined text-white/80 text-xl">wifi</span>
+</div>
+<div class="relative z-10">
+<div class="flex items-center space-x-2">
+<span class="font-label-card text-label-card text-white/70">Vault EUR/USD</span>
+</div>
+<span class="font-label-numeric text-label-numeric font-bold text-white text-xl">$3,159.00</span>
+</div>
+<div class="flex justify-between items-end relative z-10">
+<span class="font-label-card text-label-card text-white/80 text-xs">•••• 4109</span>
+<span class="material-symbols-outlined text-white/70 text-lg">credit_card</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Quick Action Floating Add Trigger (Visual Anchor & Mini-Actions) -->
+<section class="flex items-center justify-between p-3 rounded-2xl bg-[#1E1B26] border border-white/10 shadow-lg">
+<div class="flex items-center space-x-3">
+<button class="w-11 h-11 rounded-full bg-gradient-to-tr from-primary via-primary-container to-secondary-container flex items-center justify-center text-white fab-glow active:scale-95 transition-all">
+<span class="material-symbols-outlined text-2xl font-bold">add</span>
+</button>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-sm text-white font-semibold">Quick Ledger</span>
+<span class="font-body-sm text-body-sm text-[#A8A1B4] text-xs">Log expense or transfer</span>
+</div>
+</div>
+<div class="flex items-center space-x-1.5">
+<button class="p-2 rounded-xl bg-[#262232] text-white/80 hover:text-white border border-white/5 active:scale-95 transition-all" title="Scan receipt">
+<span class="material-symbols-outlined text-xl">qr_code_scanner</span>
+</button>
+<button class="p-2 rounded-xl bg-[#262232] text-white/80 hover:text-white border border-white/5 active:scale-95 transition-all" title="Budget Analytics">
+<span class="material-symbols-outlined text-xl">pie_chart</span>
+</button>
+</div>
+</section>
+<!-- Section: Dark Mode Recent Transactions Feed -->
+<section class="w-full pb-4">
+<div class="flex justify-between items-center mb-3">
+<div class="flex items-center space-x-2">
+<h2 class="font-headline-sm text-headline-sm font-semibold text-white">Recent Transactions</h2>
+<span class="font-body-sm text-body-sm text-[#A8A1B4] text-xs">Today</span>
+</div>
+<button class="font-body-sm text-body-sm text-primary-fixed-dim hover:text-white transition-colors">
+            View All
+          </button>
+</div>
+<!-- Elevated Dark Feed Container with Translucent Dividers -->
+<div class="rounded-[22px] bg-[#1E1B26]/90 border border-white/5 p-2 backdrop-blur-md shadow-xl divide-y divide-white/5">
+<!-- Item 1: Income (Vibrant Mint Amount) -->
+<div class="flex items-center justify-between p-3 rounded-xl hover:bg-white/[0.03] transition-colors">
+<div class="flex items-center space-x-3">
+<!-- Luminous Category Icon (Emerald) -->
+<div class="w-11 h-11 rounded-2xl bg-tertiary/20 border border-tertiary-fixed/30 flex items-center justify-center text-tertiary-fixed shadow-[0_0_12px_rgba(78,222,163,0.25)]">
+<span class="material-symbols-outlined text-xl">account_balance</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-sm text-white font-medium">Stripe Payout</span>
+<span class="font-body-sm text-body-sm text-[#A8A1B4] text-xs">Direct Deposit • Design Studio</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-label-numeric text-label-numeric font-semibold text-tertiary-fixed text-[15px] drop-shadow-[0_0_8px_rgba(78,222,163,0.4)]">+$2,620.00</span>
+<span class="block font-body-sm text-body-sm text-[#7D768A] text-[11px] mt-0.5">11:42 AM</span>
+</div>
+</div>
+<!-- Item 2: Glowing Rose Expense -->
+<div class="flex items-center justify-between p-3 rounded-xl hover:bg-white/[0.03] transition-colors">
+<div class="flex items-center space-x-3">
+<!-- Luminous Category Icon (Rose Culinary) -->
+<div class="w-11 h-11 rounded-2xl bg-primary-container/20 border border-[#FF4071]/40 flex items-center justify-center text-[#FF7597] shadow-[0_0_12px_rgba(255,64,113,0.25)]">
+<span class="material-symbols-outlined text-xl">restaurant</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-sm text-white font-medium">L'Avenue Restaurant</span>
+<span class="font-body-sm text-body-sm text-[#A8A1B4] text-xs">Dining &amp; Lifestyle • Sapphire</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-label-numeric text-label-numeric font-semibold text-[#FF7597] text-[15px] drop-shadow-[0_0_8px_rgba(255,64,113,0.35)]">-$84.20</span>
+<span class="block font-body-sm text-body-sm text-[#7D768A] text-[11px] mt-0.5">01:15 PM</span>
+</div>
+</div>
+<!-- Item 3: Luxury Wellness/Subscription (Soft Lilac Accent) -->
+<div class="flex items-center justify-between p-3 rounded-xl hover:bg-white/[0.03] transition-colors">
+<div class="flex items-center space-x-3">
+<!-- Luminous Category Icon (Equinox / Gym) -->
+<div class="w-11 h-11 rounded-2xl bg-secondary-container/15 border border-secondary-fixed-dim/30 flex items-center justify-center text-secondary-fixed-dim shadow-[0_0_12px_rgba(253,105,137,0.2)]">
+<span class="material-symbols-outlined text-xl">fitness_center</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-sm text-white font-medium">Equinox Fitness Club</span>
+<span class="font-body-sm text-body-sm text-[#A8A1B4] text-xs">Health &amp; Wellness • Apple Cash</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-label-numeric text-label-numeric font-semibold text-[#FF7597] text-[15px]">-$240.00</span>
+<span class="block font-body-sm text-body-sm text-[#7D768A] text-[11px] mt-0.5">Yesterday</span>
+</div>
+</div>
+<!-- Item 4: Coffee / Daily Ritual -->
+<div class="flex items-center justify-between p-3 rounded-xl hover:bg-white/[0.03] transition-colors">
+<div class="flex items-center space-x-3">
+<div class="w-11 h-11 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white/80">
+<span class="material-symbols-outlined text-xl">local_cafe</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-sm text-white font-medium">Blue Bottle Coffee</span>
+<span class="font-body-sm text-body-sm text-[#A8A1B4] text-xs">Artisan Brew • Apple Cash</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-label-numeric text-label-numeric font-semibold text-[#FF7597] text-[15px]">-$7.45</span>
+<span class="block font-body-sm text-body-sm text-[#7D768A] text-[11px] mt-0.5">Yesterday</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Contextual Quick Action Floating Action Button (FAB) -->
+<!-- Positioned above bottom bar with glowing neon drop shadow -->
+<div class="fixed bottom-20 right-6 md:right-[calc(50%-240px+1.5rem)] z-40">
+<button aria-label="Add transaction" class="w-14 h-14 rounded-full bg-gradient-to-tr from-primary to-[#FF4071] text-white flex items-center justify-center fab-glow active:scale-95 transition-all duration-150 border border-white/20">
+<span class="material-symbols-outlined text-3xl font-semibold">add</span>
+</button>
+</div>
+<!-- BottomNavBar Anchor from Shared Components JSON -->
+<!-- Mapped with JSON keys: style_bg_color, style_typography, style_component_shape, style_active_navigation, style_inactive_navigation, style_shell_layout -->
+<!-- Active state determined dynamically: 'Dashboard' (index 0) is the current screen -->
+<nav class="fixed bottom-0 left-0 right-0 w-full z-50 flex justify-around items-center px-space-xs py-space-xs max-w-[480px] mx-auto bg-surface-container-lowest/90 dark:bg-inverse-surface/90 backdrop-blur-xl shadow-lg dark:shadow-none border-t border-outline-variant/30 dark:border-outline/20 rounded-t-xl">
+<!-- Tab 1: Dashboard (ACTIVE MATCH) -->
+<a class="flex flex-col items-center justify-center bg-primary-fixed/60 dark:bg-primary/20 text-primary dark:text-primary-fixed rounded-full px-3 py-1.5 transition-all shadow-[0_0_12px_rgba(255,64,113,0.3)]" href="#dashboard">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-label-pill text-label-pill mt-0.5">Dashboard</span>
+</a>
+<!-- Tab 2: Wallets (INACTIVE) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-3 py-1.5 hover:text-on-surface dark:hover:text-on-primary-container transition-colors active:scale-95 transition-transform duration-150" href="#wallets">
+<span class="material-symbols-outlined text-xl">account_balance_wallet</span>
+<span class="font-label-pill text-label-pill mt-0.5">Wallets</span>
+</a>
+<!-- Tab 3: Analytics (INACTIVE) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-3 py-1.5 hover:text-on-surface dark:hover:text-on-primary-container transition-colors active:scale-95 transition-transform duration-150" href="#analytics">
+<span class="material-symbols-outlined text-xl">insights</span>
+<span class="font-label-pill text-label-pill mt-0.5">Analytics</span>
+</a>
+<!-- Tab 4: Settings (INACTIVE) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-3 py-1.5 hover:text-on-surface dark:hover:text-on-primary-container transition-colors active:scale-95 transition-transform duration-150" href="#settings">
+<span class="material-symbols-outlined text-xl">tune</span>
+<span class="font-label-pill text-label-pill mt-0.5">Settings</span>
+</a>
+</nav>
+</div>
+<!-- Inline Interaction for Haptic Micro-Taps -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Gentle card tilting effect on touch or pointer move
+      const cards = document.querySelectorAll('.snap-center');
+      cards.forEach(card => {
+        card.addEventListener('pointerdown', () => {
+          card.style.transform = 'scale(0.98)';
+        });
+        card.addEventListener('pointerup', () => {
+          card.style.transform = 'scale(1)';
+        });
+        card.addEventListener('pointerleave', () => {
+          card.style.transform = 'scale(1)';
+        });
+      });
+    });
+  </script>
+</body></html>

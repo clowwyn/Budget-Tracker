@@ -1,0 +1,14 @@
+{
+  "project": "offline-budget-tracker",
+  "orchestrator": "orchestrator/MAIN_ORCHESTRATOR.md",
+  "context": "CONTEXT/",
+  "subagents": [
+    "subagents/BUILDER.md",
+    "subagents/DATABASE_AGENT.md",
+    "subagents/UI_AGENT.md",
+    "subagents/QA_AGENT.md",
+    "subagents/REVIEWER.md"
+  ],
+  "verification": "VERIFICATION/",
+  "system_design": "SYSTEM_DESIGN.md"
+}
