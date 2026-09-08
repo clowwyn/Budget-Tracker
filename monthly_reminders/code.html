@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Monthly Reminders - Bloom Budget</title>
+<!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS via CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-variant": "#e5e1eb",
+            "on-secondary-container": "#6b0027",
+            "on-surface": "#1c1b22",
+            "on-primary-fixed-variant": "#910034",
+            "on-primary": "#ffffff",
+            "primary": "#b80045",
+            "on-tertiary-fixed": "#002113",
+            "surface-tint": "#bd0047",
+            "on-tertiary-container": "#f5fff6",
+            "tertiary-fixed": "#6ffbbe",
+            "tertiary-fixed-dim": "#4edea3",
+            "secondary-container": "#fd6989",
+            "on-error-container": "#93000a",
+            "outline": "#8f6f73",
+            "on-surface-variant": "#5b4043",
+            "surface-bright": "#fcf8ff",
+            "secondary-fixed": "#ffd9dd",
+            "on-secondary": "#ffffff",
+            "outline-variant": "#e3bdc1",
+            "surface": "#fcf8ff",
+            "secondary": "#ad2c4f",
+            "on-secondary-fixed": "#400014",
+            "on-background": "#1c1b22",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-high": "#ebe6f1",
+            "surface-container": "#f1ecf6",
+            "surface-container-low": "#f6f2fc",
+            "error": "#ba1a1a",
+            "on-primary-fixed": "#400012",
+            "background": "#fcf8ff",
+            "surface-dim": "#ddd8e3",
+            "on-secondary-fixed-variant": "#8c1038",
+            "tertiary-container": "#00855b",
+            "inverse-on-surface": "#f4eff9",
+            "surface-container-highest": "#e5e1eb",
+            "on-tertiary-fixed-variant": "#005236",
+            "primary-fixed-dim": "#ffb2bc",
+            "inverse-surface": "#312f37",
+            "error-container": "#ffdad6",
+            "on-tertiary": "#ffffff",
+            "inverse-primary": "#ffb2bc",
+            "secondary-fixed-dim": "#ffb2bd",
+            "tertiary": "#006947",
+            "primary-container": "#de245b",
+            "on-error": "#ffffff",
+            "on-primary-container": "#fffbff",
+            "primary-fixed": "#ffd9dd"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "gutter-tablet": "1.5rem",
+            "space-md": "1rem",
+            "space-2xl": "2rem",
+            "gutter-mobile": "1rem",
+            "margin-tablet": "2rem",
+            "space-lg": "1.25rem",
+            "space-2xs": "0.25rem",
+            "space-xl": "1.5rem",
+            "space-sm": "0.75rem",
+            "margin-mobile": "1.25rem",
+            "space-3xl": "2.5rem",
+            "space-xs": "0.5rem"
+          },
+          "fontFamily": {
+            "label-pill": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "display-lg": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "headline-sm": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "label-card": ["JetBrains Mono"],
+            "display-lg-mobile": ["Plus Jakarta Sans"],
+            "label-numeric": ["JetBrains Mono"]
+          },
+          "fontSize": {
+            "label-pill": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "700" }],
+            "headline-lg": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+            "headline-sm": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "headline-md": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "label-card": ["12px", { "lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "500" }],
+            "display-lg-mobile": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+            "label-numeric": ["15px", { "lineHeight": "20px", "letterSpacing": "-0.02em", "fontWeight": "500" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .material-symbols-fill {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .custom-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased selection:bg-primary-fixed selection:text-primary min-h-screen">
+<!-- Mobile Viewport Shell (Max 480px) -->
+<div class="max-w-[480px] mx-auto min-h-screen relative pb-28 pt-16 flex flex-col bg-surface-bright shadow-2xl">
+<!-- TopAppBar Component (from Shared Components JSON Blueprint) -->
+<header class="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-margin-mobile h-16 max-w-[480px] mx-auto bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-md shadow-sm dark:shadow-none transition-all">
+<!-- Leading Item: Avatar with subtle tactile badge -->
+<div class="flex items-center gap-space-xs">
+<div class="relative cursor-pointer active:scale-95 transition-transform duration-150">
+<img class="w-10 h-10 rounded-full object-cover ring-2 ring-outline-variant/30" data-alt="Close up high-fashion portrait of an elegant young woman smiling softly, illuminated by delicate warm rose morning light, modern editorial photography style with high key aesthetic and creamy porcelain background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6PQPrfSx9EFF10nvl1H2a8BJC37dWEbZ7BqfsTHupyak8D444Tvmyp82vfKysf1kFs-d5A1NlBj2kQRiFCkWWKDxJxyFFL4xltVylPTYysI5FviwB1wZRPD49yZ8KzAgCAYsdet1W22SDnW9R-RNwgRidJ3ajqytZkogUy47y4S4_7gdiS80PhfLsYNVbhpO31-WivWr8cUlptKuU1Dy9EVBBKHlspFRG4ukko8vjRNGNp81G2pCuCQ"/>
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-tertiary-container rounded-full ring-2 ring-surface-container-lowest"></span>
+</div>
+<div>
+<span class="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary-fixed-dim block leading-tight">Monthly Reminders</span>
+<span class="font-label-pill text-label-pill text-on-surface-variant flex items-center gap-1">
+<span>Bloom Budget</span>
+<span class="w-1 h-1 rounded-full bg-primary/40"></span>
+<span>Auto-sync</span>
+</span>
+</div>
+</div>
+<!-- Trailing Actions Cluster -->
+<div class="flex items-center gap-space-xs">
+<!-- Quick Add Action Button -->
+<button class="flex items-center gap-1 bg-primary text-on-primary font-label-pill text-label-pill px-3 py-1.5 rounded-full shadow-sm hover:bg-primary-container active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[16px]">add</span>
+<span>Add</span>
+</button>
+<!-- Notification Bell -->
+<button class="p-2 rounded-full text-on-surface-variant hover:bg-surface-container-high/40 active:scale-95 transition-transform duration-150 relative">
+<span class="material-symbols-outlined text-primary text-[22px]">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-secondary-container ring-2 ring-surface"></span>
+</button>
+</div>
+</header>
+<!-- Main Dynamic Scroll Canvas -->
+<main class="flex-1 px-margin-mobile pt-space-md space-y-space-xl">
+<!-- Month Selector Header Strip -->
+<section class="flex items-center justify-between">
+<div class="inline-flex items-center gap-space-xs bg-surface-container-lowest px-space-md py-1.5 rounded-full border border-outline-variant/30 shadow-sm">
+<span class="material-symbols-outlined text-primary text-[18px]">calendar_month</span>
+<span class="font-headline-sm text-[15px] font-semibold text-on-surface">September 2024</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[16px]">expand_more</span>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface-variant font-label-pill text-label-pill bg-surface-container-low px-2.5 py-1 rounded-full border border-outline-variant/20">
+<span class="w-2 h-2 rounded-full bg-tertiary-container animate-pulse"></span>
+<span>4 Scheduled</span>
+</div>
+</section>
+<!-- Monthly Commitments Overview Card (Bento Style with Pink Gradient & Tactile Physics) -->
+<section class="relative overflow-hidden rounded-[24px] p-space-xl bg-gradient-to-br from-secondary-container via-primary-container to-primary text-on-primary shadow-lg shadow-primary/15 transition-all">
+<!-- Ambient decorative shapes -->
+<div class="absolute -right-6 -top-6 w-32 h-32 rounded-full bg-on-primary/10 blur-xl pointer-events-none"></div>
+<div class="absolute -left-8 -bottom-8 w-36 h-36 rounded-full bg-secondary/20 blur-2xl pointer-events-none"></div>
+<div class="relative z-10 space-y-space-md">
+<!-- Card Header & Badge -->
+<div class="flex items-center justify-between">
+<span class="font-label-pill text-label-pill uppercase tracking-wider text-on-primary-container/80 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">event_upcoming</span>
+              Total Commitments
+            </span>
+<span class="font-label-card text-label-card bg-on-primary/20 backdrop-blur-md px-2.5 py-0.5 rounded-full text-on-primary">
+              CYCLE: SEP 1 - 30
+            </span>
+</div>
+<!-- Total Balance Hero -->
+<div>
+<h1 class="font-display-lg-mobile text-display-lg-mobile font-bold tracking-tight text-white flex items-baseline gap-1">
+              $1,295<span class="text-[20px] font-medium opacity-90">.48</span>
+</h1>
+<p class="font-body-sm text-body-sm text-on-primary-container/90 mt-1 flex items-center gap-1">
+<span>62% of monthly recurring threshold reached</span>
+</p>
+</div>
+<!-- Progress Track Bar -->
+<div class="w-full bg-on-primary/20 h-2 rounded-full overflow-hidden p-0.5">
+<div class="bg-surface-bright h-full rounded-full w-[37.4%] shadow-sm"></div>
+</div>
+<!-- Sub-stat Badges (Paid vs Upcoming) -->
+<div class="grid grid-cols-2 gap-space-sm pt-space-xs">
+<!-- Paid Badge -->
+<div class="flex items-center gap-2.5 bg-on-primary/15 backdrop-blur-md border border-on-primary/20 rounded-xl p-2.5">
+<div class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-white text-[16px] font-bold">check</span>
+</div>
+<div class="overflow-hidden">
+<span class="font-label-pill text-[10px] uppercase text-white/80 block leading-tight">Paid</span>
+<span class="font-label-numeric text-label-numeric text-white font-semibold block truncate">$485.49</span>
+</div>
+</div>
+<!-- Upcoming Badge -->
+<div class="flex items-center gap-2.5 bg-on-primary/15 backdrop-blur-md border border-on-primary/20 rounded-xl p-2.5">
+<div class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-white text-[16px]">schedule</span>
+</div>
+<div class="overflow-hidden">
+<span class="font-label-pill text-[10px] uppercase text-white/80 block leading-tight">Upcoming</span>
+<span class="font-label-numeric text-label-numeric text-white font-semibold block truncate">$809.99</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Horizontal Calendar Due-Date Strip -->
+<section class="space-y-space-xs">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-sm text-headline-sm font-semibold text-on-surface">September Due Dates</h2>
+<span class="font-label-pill text-label-pill text-primary font-bold">Week 2</span>
+</div>
+<div class="flex items-center justify-between gap-1.5 overflow-x-auto custom-scrollbar py-1">
+<!-- Mon Sep 11 -->
+<div class="flex flex-col items-center justify-center min-w-[50px] py-2.5 rounded-2xl bg-surface-container-lowest border border-outline-variant/20 shadow-sm transition-all hover:bg-surface-container-high/40">
+<span class="font-body-sm text-[11px] text-on-surface-variant font-medium">Mon</span>
+<span class="font-label-numeric text-label-numeric font-semibold text-on-surface">11</span>
+<span class="w-1.5 h-1.5 rounded-full bg-transparent mt-1"></span>
+</div>
+<!-- Tue Sep 12 -->
+<div class="flex flex-col items-center justify-center min-w-[50px] py-2.5 rounded-2xl bg-surface-container-lowest border border-outline-variant/20 shadow-sm transition-all hover:bg-surface-container-high/40">
+<span class="font-body-sm text-[11px] text-on-surface-variant font-medium">Tue</span>
+<span class="font-label-numeric text-label-numeric font-semibold text-on-surface">12</span>
+<span class="w-1.5 h-1.5 rounded-full bg-transparent mt-1"></span>
+</div>
+<!-- Wed Sep 13 -->
+<div class="flex flex-col items-center justify-center min-w-[50px] py-2.5 rounded-2xl bg-surface-container-lowest border border-outline-variant/20 shadow-sm transition-all hover:bg-surface-container-high/40">
+<span class="font-body-sm text-[11px] text-on-surface-variant font-medium">Wed</span>
+<span class="font-label-numeric text-label-numeric font-semibold text-on-surface">13</span>
+<span class="w-1.5 h-1.5 rounded-full bg-transparent mt-1"></span>
+</div>
+<!-- Thu Sep 14 (Due Date Indicator: Netflix) - Active Highlight -->
+<div class="flex flex-col items-center justify-center min-w-[50px] py-2.5 rounded-2xl bg-primary text-on-primary shadow-md shadow-primary/20 scale-105 border border-primary transition-all">
+<span class="font-body-sm text-[11px] text-white/80 font-medium">Thu</span>
+<span class="font-label-numeric text-label-numeric font-bold text-white">14</span>
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed mt-1 animate-ping"></span>
+</div>
+<!-- Fri Sep 15 -->
+<div class="flex flex-col items-center justify-center min-w-[50px] py-2.5 rounded-2xl bg-surface-container-lowest border border-outline-variant/20 shadow-sm transition-all hover:bg-surface-container-high/40">
+<span class="font-body-sm text-[11px] text-on-surface-variant font-medium">Fri</span>
+<span class="font-label-numeric text-label-numeric font-semibold text-on-surface">15</span>
+<span class="w-1.5 h-1.5 rounded-full bg-transparent mt-1"></span>
+</div>
+<!-- Sat Sep 16 -->
+<div class="flex flex-col items-center justify-center min-w-[50px] py-2.5 rounded-2xl bg-surface-container-lowest border border-outline-variant/20 shadow-sm transition-all hover:bg-surface-container-high/40">
+<span class="font-body-sm text-[11px] text-on-surface-variant font-medium">Sat</span>
+<span class="font-label-numeric text-label-numeric font-semibold text-on-surface">16</span>
+<span class="w-1.5 h-1.5 rounded-full bg-transparent mt-1"></span>
+</div>
+<!-- Sun Sep 17 (Due Date Indicator: Rent) -->
+<div class="flex flex-col items-center justify-center min-w-[50px] py-2.5 rounded-2xl bg-secondary-fixed/40 border border-secondary/30 shadow-sm transition-all">
+<span class="font-body-sm text-[11px] text-on-secondary-fixed-variant font-medium">Sun</span>
+<span class="font-label-numeric text-label-numeric font-bold text-on-secondary-fixed">17</span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary mt-1"></span>
+</div>
+</div>
+</section>
+<!-- Filter Chips -->
+<section class="flex items-center gap-space-xs overflow-x-auto custom-scrollbar pb-1">
+<!-- Active Filter -->
+<button class="h-8 px-4 rounded-full bg-primary text-on-primary font-label-pill text-label-pill flex items-center justify-center shrink-0 shadow-sm shadow-primary/20 active:scale-95 transition-transform">
+          All (7)
+        </button>
+<!-- Inactive Filter: Upcoming -->
+<button class="h-8 px-4 rounded-full bg-surface-container-lowest border border-outline-variant/40 text-on-surface font-label-pill text-label-pill flex items-center justify-center shrink-0 hover:bg-surface-container-high/40 active:scale-95 transition-all">
+          Upcoming (4)
+        </button>
+<!-- Inactive Filter: Subscriptions -->
+<button class="h-8 px-4 rounded-full bg-surface-container-lowest border border-outline-variant/40 text-on-surface-variant font-label-pill text-label-pill flex items-center justify-center shrink-0 hover:bg-surface-container-high/40 active:scale-95 transition-all">
+          Subscriptions
+        </button>
+<!-- Inactive Filter: Utilities & Rent -->
+<button class="h-8 px-4 rounded-full bg-surface-container-lowest border border-outline-variant/40 text-on-surface-variant font-label-pill text-label-pill flex items-center justify-center shrink-0 hover:bg-surface-container-high/40 active:scale-95 transition-all">
+          Utilities &amp; Rent
+        </button>
+</section>
+<!-- 'Due This Week' Section Cards -->
+<section class="space-y-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<h2 class="font-headline-sm text-headline-sm font-bold text-on-surface">Due This Week</h2>
+<span class="w-5 h-5 rounded-full bg-primary-fixed text-primary font-label-pill text-[10px] flex items-center justify-center font-bold">3</span>
+</div>
+<button class="text-primary font-label-pill text-label-pill flex items-center gap-0.5 hover:underline">
+<span>Manage All</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+<!-- Card 1: Netflix Premium -->
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-2xl p-space-md shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<!-- Brand Squircle Icon -->
+<div class="w-11 h-11 rounded-2xl bg-secondary-fixed/50 flex items-center justify-center text-primary shadow-inner">
+<span class="material-symbols-outlined text-[24px]">movie</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-[16px] font-bold text-on-surface">Netflix Premium</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1.5">
+<span class="text-primary font-medium">Due Sep 14</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span>in 2 days</span>
+</p>
+</div>
+</div>
+<!-- Financial Value -->
+<div class="text-right">
+<span class="font-label-numeric text-[16px] font-bold text-on-surface block">$15.99</span>
+<span class="font-body-sm text-[11px] text-on-surface-variant">per month</span>
+</div>
+</div>
+<!-- Metadata & Tags -->
+<div class="mt-3 pt-3 border-t border-surface-container flex items-center justify-between text-body-sm">
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-1 text-[11px] font-label-card bg-surface-container px-2 py-0.5 rounded-md text-on-surface-variant">
+<span class="material-symbols-outlined text-[13px]">credit_card</span>
+                Revolut ••4920
+              </span>
+<span class="inline-flex items-center gap-1 text-[11px] font-label-pill bg-tertiary-fixed/30 text-tertiary px-2 py-0.5 rounded-full font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                Auto-renew
+              </span>
+</div>
+</div>
+<!-- Quick Action Controls -->
+<div class="grid grid-cols-2 gap-2 mt-3">
+<button class="h-9 px-3 rounded-full bg-surface-container text-on-surface font-label-pill text-label-pill flex items-center justify-center gap-1 hover:bg-surface-container-high active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[15px]">snooze</span>
+<span>Snooze</span>
+</button>
+<button class="h-9 px-3 rounded-full bg-primary text-on-primary font-label-pill text-label-pill flex items-center justify-center gap-1 shadow-sm hover:bg-primary-container active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[15px]">done_all</span>
+<span>Mark as Paid</span>
+</button>
+</div>
+</div>
+<!-- Card 2: Apartment Rent -->
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-2xl p-space-md shadow-sm hover:shadow-md transition-shadow relative">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<!-- Brand Squircle Icon -->
+<div class="w-11 h-11 rounded-2xl bg-surface-container-high flex items-center justify-center text-primary shadow-inner">
+<span class="material-symbols-outlined text-[24px]">apartment</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-[16px] font-bold text-on-surface">Apartment Rent</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1.5">
+<span class="text-on-surface font-medium">Due Sep 17</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span>in 5 days</span>
+</p>
+</div>
+</div>
+<!-- Financial Value -->
+<div class="text-right">
+<span class="font-label-numeric text-[16px] font-bold text-on-surface block">$850.00</span>
+<span class="font-body-sm text-[11px] text-on-surface-variant">recurring</span>
+</div>
+</div>
+<!-- Metadata & Autopay Status with Alert Toggle -->
+<div class="mt-3 pt-3 border-t border-surface-container flex items-center justify-between text-body-sm">
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-1 text-[11px] font-label-card bg-surface-container px-2 py-0.5 rounded-md text-on-surface-variant">
+<span class="material-symbols-outlined text-[13px]">account_balance</span>
+                Chase Premier
+              </span>
+<span class="inline-flex items-center gap-1 text-[11px] font-label-pill bg-secondary-fixed text-on-secondary-container px-2 py-0.5 rounded-full font-bold">
+<span class="material-symbols-outlined text-[12px] material-symbols-fill">bolt</span>
+                Autopay ON
+              </span>
+</div>
+<!-- Alert Notification Toggle Indicator -->
+<div class="flex items-center gap-1.5 cursor-pointer text-on-surface-variant hover:text-primary">
+<span class="font-label-pill text-[10px] text-on-surface-variant">Alert</span>
+<div class="w-8 h-4.5 bg-primary rounded-full p-0.5 flex items-center justify-end">
+<div class="w-3.5 h-3.5 bg-white rounded-full shadow"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 3: Equinox Membership -->
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-2xl p-space-md shadow-sm hover:shadow-md transition-shadow relative">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<!-- Brand Squircle Icon -->
+<div class="w-11 h-11 rounded-2xl bg-secondary-fixed-dim/30 flex items-center justify-center text-primary shadow-inner">
+<span class="material-symbols-outlined text-[24px]">fitness_center</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-[16px] font-bold text-on-surface">Equinox Membership</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1.5">
+<span class="text-on-surface font-medium">Due Sep 20</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span>in 8 days</span>
+</p>
+</div>
+</div>
+<!-- Financial Value -->
+<div class="text-right">
+<span class="font-label-numeric text-[16px] font-bold text-on-surface block">$280.00</span>
+<span class="font-body-sm text-[11px] text-on-surface-variant">lifestyle</span>
+</div>
+</div>
+<!-- Metadata -->
+<div class="mt-3 pt-3 border-t border-surface-container flex items-center justify-between text-body-sm">
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-1 text-[11px] font-label-card bg-surface-container px-2 py-0.5 rounded-md text-on-surface-variant">
+<span class="material-symbols-outlined text-[13px]">phone_iphone</span>
+                Apple Cash
+              </span>
+</div>
+<button class="text-primary font-label-pill text-label-pill flex items-center gap-1 hover:underline">
+<span>View Details</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Completed & Paid This Month Accordion / List -->
+<section class="space-y-space-sm pb-space-lg">
+<div class="flex items-center justify-between p-1 cursor-pointer">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 rounded-full bg-tertiary-fixed flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[14px] font-bold">done</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm font-bold text-on-surface">Completed &amp; Paid This Month</h2>
+<span class="text-on-surface-variant font-label-card text-label-card">(2)</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">expand_less</span>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant/20 rounded-2xl divide-y divide-surface-container shadow-sm overflow-hidden">
+<!-- Item 1: Fiber Internet -->
+<div class="p-space-md flex items-center justify-between hover:bg-surface-container-low/50 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed/30 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[20px]">wifi</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-[15px] font-semibold text-on-surface">Fiber Internet</h4>
+<p class="font-body-sm text-body-sm text-tertiary flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+<span>Paid Sep 4</span>
+</p>
+</div>
+</div>
+<div class="text-right">
+<span class="font-label-numeric text-[15px] font-semibold text-on-surface block">$70.00</span>
+<span class="font-body-sm text-[10px] text-on-surface-variant font-label-card">AUTO-DEBIT</span>
+</div>
+</div>
+<!-- Item 2: ConEdison Electric -->
+<div class="p-space-md flex items-center justify-between hover:bg-surface-container-low/50 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed/30 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[20px]">bolt</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-[15px] font-semibold text-on-surface">ConEdison Electric</h4>
+<p class="font-body-sm text-body-sm text-tertiary flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+<span>Paid Sep 2</span>
+</p>
+</div>
+</div>
+<div class="text-right">
+<span class="font-label-numeric text-[15px] font-semibold text-on-surface block">$64.50</span>
+<span class="font-body-sm text-[10px] text-on-surface-variant font-label-card">ONLINE PAY</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar Component (Predictive Exact Schema Mapping from JSON) -->
+<!-- Destination count: 4, Destination 3 (Reminders) active -->
+<nav class="fixed bottom-0 left-0 right-0 w-full z-50 flex justify-around items-center px-space-xs py-space-xs max-w-[480px] mx-auto bg-surface-container-lowest/90 dark:bg-inverse-surface/90 backdrop-blur-xl rounded-t-xl shadow-lg dark:shadow-none">
+<!-- Tab 1: Dashboard (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-3 py-1.5 hover:text-on-surface dark:hover:text-on-primary-container transition-colors active:scale-95" href="#">
+<span class="material-symbols-outlined text-[24px]" data-icon="dashboard">dashboard</span>
+<span class="font-label-pill text-label-pill mt-0.5">Dashboard</span>
+</a>
+<!-- Tab 2: Wallets (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-3 py-1.5 hover:text-on-surface dark:hover:text-on-primary-container transition-colors active:scale-95" href="#">
+<span class="material-symbols-outlined text-[24px]" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-label-pill text-label-pill mt-0.5">Wallets</span>
+</a>
+<!-- Tab 3: Reminders (ACTIVE MATCH - Exactly style_active_navigation) -->
+<a class="flex flex-col items-center justify-center bg-primary-fixed/60 dark:bg-primary/20 text-primary dark:text-primary-fixed rounded-full px-3 py-1.5 transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined material-symbols-fill text-[24px]" data-icon="event_repeat" data-weight="fill" style="font-variation-settings: 'FILL' 1;">event_repeat</span>
+<span class="font-label-pill text-label-pill mt-0.5 font-bold">Reminders</span>
+</a>
+<!-- Tab 4: Settings (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-3 py-1.5 hover:text-on-surface dark:hover:text-on-primary-container transition-colors active:scale-95" href="#">
+<span class="material-symbols-outlined text-[24px]" data-icon="tune">tune</span>
+<span class="font-label-pill text-label-pill mt-0.5">Settings</span>
+</a>
+</nav>
+</div>
+</body></html>

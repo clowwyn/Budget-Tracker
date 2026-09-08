@@ -5,24 +5,46 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/splash.png",
-    "userInterfaceStyle": "light",
-    "platforms": ["ios", "android", "web"],
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
+      "resizeMode": "cover",
       "backgroundColor": "#fcf8ff"
     },
+    "userInterfaceStyle": "light",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.bloom.budget"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/splash.png",
         "backgroundColor": "#fcf8ff"
       },
       "package": "com.bloom.budget"
     },
-    "plugins": []
+    "plugins": [
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth",
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.323697297833-9jc56ej04v6qbcd7e8od4bjdtn858i11"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "e7d314fd-f950-4032-ad33-dd6dc2e873a2"
+      },
+      "firebaseWebClientId": "323697297833-lfp1k5m0d4paehd11lm93jagngcru1je.apps.googleusercontent.com"
+    }
   }
 }

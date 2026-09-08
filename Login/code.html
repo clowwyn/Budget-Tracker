@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Bloom Budget - Sign In</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-primary-fixed-variant": "#910034",
+            "surface-bright": "#fcf8ff",
+            "background": "#fcf8ff",
+            "on-secondary-container": "#6b0027",
+            "primary-container": "#de245b",
+            "surface-container-low": "#f6f2fc",
+            "outline": "#8f6f73",
+            "surface-container": "#f1ecf6",
+            "inverse-primary": "#ffb2bc",
+            "secondary-fixed-dim": "#ffb2bd",
+            "tertiary-fixed": "#6ffbbe",
+            "surface-container-highest": "#e5e1eb",
+            "on-primary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "secondary-fixed": "#ffd9dd",
+            "on-secondary-fixed": "#400014",
+            "surface-container-high": "#ebe6f1",
+            "surface-dim": "#ddd8e3",
+            "surface": "#fcf8ff",
+            "on-tertiary-container": "#f5fff6",
+            "secondary": "#ad2c4f",
+            "primary-fixed-dim": "#ffb2bc",
+            "on-error": "#ffffff",
+            "error-container": "#ffdad6",
+            "on-surface-variant": "#5b4043",
+            "on-tertiary": "#ffffff",
+            "tertiary-fixed-dim": "#4edea3",
+            "on-tertiary-fixed": "#002113",
+            "inverse-on-surface": "#f4eff9",
+            "surface-tint": "#bd0047",
+            "on-secondary": "#ffffff",
+            "secondary-container": "#fd6989",
+            "on-tertiary-fixed-variant": "#005236",
+            "outline-variant": "#e3bdc1",
+            "tertiary-container": "#00855b",
+            "on-background": "#1c1b22",
+            "primary-fixed": "#ffd9dd",
+            "on-primary-fixed": "#400012",
+            "on-secondary-fixed-variant": "#8c1038",
+            "primary": "#b80045",
+            "error": "#ba1a1a",
+            "on-error-container": "#93000a",
+            "on-primary-container": "#fffbff",
+            "surface-variant": "#e5e1eb",
+            "inverse-surface": "#312f37",
+            "tertiary": "#006947",
+            "on-surface": "#1c1b22"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-2xs": "0.25rem",
+            "space-xl": "1.5rem",
+            "space-md": "1rem",
+            "margin-tablet": "2rem",
+            "margin-mobile": "1.25rem",
+            "space-3xl": "2.5rem",
+            "space-2xl": "2rem",
+            "space-xs": "0.5rem",
+            "gutter-tablet": "1.5rem",
+            "space-lg": "1.25rem",
+            "space-sm": "0.75rem",
+            "gutter-mobile": "1rem"
+          },
+          "fontFamily": {
+            "body-lg": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "display-lg": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "label-card": ["JetBrains Mono"],
+            "headline-sm": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "label-numeric": ["JetBrains Mono"],
+            "label-pill": ["Plus Jakarta Sans"],
+            "display-lg-mobile": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "headline-lg": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+            "label-card": ["12px", { "lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "500" }],
+            "headline-sm": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "headline-md": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "label-numeric": ["15px", { "lineHeight": "20px", "letterSpacing": "-0.02em", "fontWeight": "500" }],
+            "label-pill": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "700" }],
+            "display-lg-mobile": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.025em", "fontWeight": "700" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .level-1-card {
+      box-shadow: 0 4px 20px -2px rgba(255, 64, 113, 0.06), 0 1px 3px 0 rgba(18, 17, 24, 0.03);
+      border: 1px solid rgba(255, 107, 139, 0.12);
+    }
+    .level-2-glow {
+      box-shadow: 0 12px 32px -4px rgba(255, 64, 113, 0.15), 0 4px 10px -2px rgba(18, 17, 24, 0.04);
+    }
+    .bloom-gradient-btn {
+      background: linear-gradient(135deg, #FF6B8B 0%, #FF4071 100%);
+      box-shadow: 0 8px 24px -2px rgba(255, 64, 113, 0.35);
+    }
+    .bloom-gradient-btn:active {
+      transform: scale(0.98);
+      box-shadow: 0 4px 12px -1px rgba(255, 64, 113, 0.25);
+    }
+    .ambient-bloom-sphere {
+      background: radial-gradient(circle at center, rgba(255, 107, 139, 0.18) 0%, rgba(255, 245, 247, 0) 70%);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col items-center justify-start antialiased selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Main Mobile Canvas Screen Wrapper (Max 480px constrained) -->
+<div class="w-full max-w-[480px] min-h-screen bg-surface-bright relative flex flex-col justify-between overflow-hidden px-margin-mobile pb-space-xl">
+<!-- Ambient Rose Glow Effects in Background -->
+<div class="absolute -top-16 -right-16 w-80 h-80 rounded-full ambient-bloom-sphere pointer-events-none blur-2xl"></div>
+<div class="absolute top-1/3 -left-24 w-72 h-72 rounded-full ambient-bloom-sphere pointer-events-none blur-3xl opacity-60"></div>
+<!-- Top Navigation Anchor & iOS Style Pill Indicator -->
+<div class="w-full pt-space-xs z-10">
+<!-- Status & Dismiss Bar -->
+<div class="flex items-center justify-between h-14">
+<button aria-label="Dismiss sign in" class="w-10 h-10 rounded-full bg-surface-container-lowest/80 backdrop-blur-md level-1-card flex items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-95" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="close">close</span>
+</button>
+<div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-low/70 backdrop-blur-md border border-outline-variant/30">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-container animate-pulse"></span>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-medium">Safe Connection</span>
+</div>
+<button aria-label="Support &amp; Help" class="w-10 h-10 rounded-full bg-surface-container-lowest/80 backdrop-blur-md level-1-card flex items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-95" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="help_outline">help_outline</span>
+</button>
+</div>
+</div>
+<!-- Central Interactive Flow Content -->
+<main class="w-full z-10 flex-1 flex flex-col justify-center py-space-sm">
+<!-- Brand Hero Header -->
+<div class="flex flex-col items-center text-center mb-space-xl">
+<!-- App Icon Showcase with Elevation -->
+<div class="relative group cursor-pointer">
+<div class="absolute inset-0 rounded-3xl bg-secondary-container/30 blur-xl scale-95 -z-10 group-hover:scale-105 transition-transform duration-300"></div>
+<div class="w-24 h-24 rounded-3xl overflow-hidden level-2-glow p-1 bg-surface-container-lowest ring-1 ring-outline-variant/20 transition-transform duration-300 group-hover:-translate-y-1">
+<img alt="Bloom Budget Application Logo" class="w-full h-full object-cover rounded-[20px]" src="https://lh3.googleusercontent.com/aida/AEtjO1XwTk8nIxZAygBH9-cQSRNhQe7sbEEs33KcYVun8bmVhpiEciFs1eC8LuKx44OBxm9j96B6yoLQcr-kFy1FiKrvhncD5SrWkraFfF3OEIJ9rRsVTVujBZ6SqkqV02S6Yyl402pDBkBiZvNYMsdyDmZKiwhFT-3497vgDOXh8PMpt6QgwzkYXk_dZxNYtUAy59s3fHZHmmwVNv8knsVsgA5uWewTIoW2S0oXo9Jjt9TfOg3iaZRYMla6oMmy"/>
+</div>
+<!-- Micro Pill Badge -->
+<div class="absolute -bottom-2 -right-1 bg-surface-container-lowest rounded-full px-2 py-0.5 level-1-card flex items-center gap-1">
+<span class="material-symbols-outlined text-primary text-[14px]" data-icon="verified" data-weight="fill">verified</span>
+<span class="font-label-pill text-label-pill text-primary tracking-wide">SECURE</span>
+</div>
+</div>
+<!-- Typography Cluster -->
+<h1 class="font-display-lg-mobile text-display-lg-mobile text-on-surface font-extrabold tracking-tight mt- space-md mt-4">
+          Bloom Budget
+        </h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant font-medium mt-1 tracking-wide">
+          Your mindful wealth companion
+        </p>
+<!-- Welcome Banner Subtext -->
+<div class="mt-4 px-4 py-1.5 rounded-full bg-surface-container-low/60 border border-outline-variant/20 text-center">
+<span class="font-body-sm text-body-sm text-secondary font-medium">
+            Sign in to access your linked cards &amp; monthly budgets
+          </span>
+</div>
+</div>
+<!-- Authentication Form Container -->
+<div class="bg-surface-container-lowest/90 backdrop-blur-xl rounded-3xl p-6 level-1-card w-full">
+<form class="flex flex-col gap-space-md" id="loginForm" onsubmit="event.preventDefault();">
+<!-- Input Field: Email / Username -->
+<div class="flex flex-col gap-1.5">
+<label class="font-headline-sm text-body-sm text-on-surface-variant font-semibold ml-1 flex items-center justify-between" for="emailInput">
+<span>Email or Account ID</span>
+<span class="font-label-card text-[11px] text-outline opacity-80">Encrypted</span>
+</label>
+<div class="relative flex items-center rounded-2xl bg-surface-container-lowest border-[1.5px] border-outline-variant/40 focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/15 transition-all duration-200">
+<span class="material-symbols-outlined absolute left-4 text-on-surface-variant/70 text-[20px]" data-icon="mail">mail</span>
+<input class="w-full bg-transparent pl-12 pr-4 py-3.5 rounded-2xl font-body-md text-body-md text-on-surface placeholder:text-outline/50 border-0 focus:ring-0 focus:outline-none" id="emailInput" placeholder="sarah.j@bloom.app" required="" type="email" value="sarah.j@bloom.app"/>
+</div>
+</div>
+<!-- Input Field: Password -->
+<div class="flex flex-col gap-1.5">
+<label class="font-headline-sm text-body-sm text-on-surface-variant font-semibold ml-1 flex items-center justify-between" for="passwordInput">
+<span>Password</span>
+<button class="font-body-sm text-body-sm text-primary hover:text-primary-container font-semibold transition-colors" type="button">
+                Forgot password?
+              </button>
+</label>
+<div class="relative flex items-center rounded-2xl bg-surface-container-lowest border-[1.5px] border-outline-variant/40 focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/15 transition-all duration-200">
+<span class="material-symbols-outlined absolute left-4 text-on-surface-variant/70 text-[20px]" data-icon="lock">lock</span>
+<input class="w-full bg-transparent pl-12 pr-12 py-3.5 rounded-2xl font-body-md text-body-md text-on-surface placeholder:text-outline/50 border-0 focus:ring-0 focus:outline-none font-label-numeric tracking-widest" id="passwordInput" placeholder="Enter password" required="" type="password" value="••••••••••••"/>
+<button aria-label="Toggle password visibility" class="absolute right-3 p-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high/40 transition-colors flex items-center justify-center" id="togglePassword" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="visibility" id="eyeIcon">visibility</span>
+</button>
+</div>
+</div>
+<!-- Remember Me Switch / Checkbox Row -->
+<div class="flex items-center justify-between pt-1">
+<label class="flex items-center gap-2.5 cursor-pointer select-none">
+<input checked="" class="w-5 h-5 rounded-lg text-primary border-outline-variant/60 focus:ring-primary/20 accent-primary transition-all cursor-pointer" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-medium">Keep me signed in</span>
+</label>
+<!-- Face ID Biometric Quick Trigger -->
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-low hover:bg-secondary-fixed/50 text-secondary transition-all active:scale-95 border border-outline-variant/30" title="Fast Face ID login" type="button">
+<span class="material-symbols-outlined text-[18px] text-primary" data-icon="face">face</span>
+<span class="font-label-pill text-label-pill text-primary font-bold">Face ID</span>
+</button>
+</div>
+<!-- Primary Submit Button CTA -->
+<button class="w-full h-[52px] rounded-full bloom-gradient-btn text-on-primary font-headline-sm text-headline-sm flex items-center justify-center gap-2 mt-2 transition-all group" type="submit">
+<span class="font-semibold tracking-wide">Sign In</span>
+<span class="material-symbols-outlined text-[20px] transition-transform group-hover:translate-x-1" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</form>
+<!-- Biometric Quick Strip (Fast Access Tile) -->
+<div class="mt-4 pt-4 border-t border-outline-variant/20 flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-9 h-9 rounded-xl bg-primary-fixed/50 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]" data-icon="fingerprint">fingerprint</span>
+</div>
+<div class="flex flex-col text-left">
+<span class="font-headline-sm text-[13px] text-on-surface font-semibold">Touch ID &amp; Passkeys</span>
+<span class="font-body-sm text-[11px] text-outline">Last synced 2h ago</span>
+</div>
+</div>
+<button class="px-3.5 py-1.5 rounded-full bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors font-body-sm text-body-sm font-semibold active:scale-95" type="button">
+            Enable
+          </button>
+</div>
+</div>
+<!-- Social Authentication Separator -->
+<div class="relative my-5 flex items-center justify-center">
+<div class="absolute inset-0 flex items-center">
+<div class="w-full border-t border-outline-variant/30"></div>
+</div>
+<span class="relative bg-surface-bright px-4 font-body-sm text-[12px] text-on-surface-variant/80 font-medium">
+          Or continue with
+        </span>
+</div>
+<!-- Fast Third-party Authentications Bento Split -->
+<div class="grid grid-cols-2 gap-3 w-full">
+<!-- Apple Sign In -->
+<button class="h-12 rounded-2xl bg-surface-container-lowest level-1-card hover:bg-surface-container transition-all flex items-center justify-center gap-2.5 px-4 active:scale-98" type="button">
+<svg class="w-5 h-5 fill-current text-on-surface" viewbox="0 0 170 170">
+<path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.69-3.04-7.67-7.81-11.94-14.34-6.32-9.7-11.39-20.9-15.2-33.6C5.07 98.63 3.06 85.91 3.06 73.83c0-14.49 3.73-26.68 11.2-36.57 7.46-9.89 16.89-14.93 28.29-15.12 4.12 0 8.89 1.12 14.3 3.35 5.42 2.24 9.4 3.4 11.96 3.48 2.01 0 6.16-1.29 12.44-3.88 6.28-2.6 11.94-3.77 16.99-3.52 12.82.64 23.16 5.47 31.02 14.49-11.39 6.89-16.96 16.38-16.7 28.48.26 9.49 3.92 17.44 10.97 23.85 7.05 6.42 15.22 10.15 24.52 11.2-2.35 7.15-5.31 14.03-8.89 20.64zM119.22 33.15c0-7.35 2.65-14.28 7.95-20.79 5.3-6.51 11.9-10.74 19.8-12.69.26 1.15.39 2.17.39 3.06 0 7.3-2.73 14.34-8.2 21.12-5.46 6.78-12.06 10.66-19.79 11.64-.09-.77-.15-1.55-.15-2.34z"></path>
+</svg>
+<span class="font-body-md text-body-md text-on-surface font-semibold">Apple</span>
+</button>
+<!-- Google Sign In -->
+<button class="h-12 rounded-2xl bg-surface-container-lowest level-1-card hover:bg-surface-container transition-all flex items-center justify-center gap-2.5 px-4 active:scale-98" type="button">
+<svg class="w-5 h-5" viewbox="0 0 24 24">
+<path d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z" fill="#4285F4"></path>
+<path d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z" fill="#34A853"></path>
+<path d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.98 0 12s.45 3.82 1.25 5.42l4.03-3.15z" fill="#FBBC05"></path>
+<path d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z" fill="#EA4335"></path>
+</svg>
+<span class="font-body-md text-body-md text-on-surface font-semibold">Google</span>
+</button>
+</div>
+</main>
+<!-- Bottom Footer & Account Registration Links -->
+<footer class="w-full z-10 flex flex-col items-center justify-center gap-3 pt-2">
+<!-- Sign Up Prompt -->
+<p class="font-body-md text-body-md text-on-surface-variant font-normal text-center">
+        Don't have an account? 
+        <a class="font-semibold text-primary hover:text-primary-container underline decoration-primary-fixed decoration-2 underline-offset-4 transition-colors" href="#register">
+          Sign up
+        </a>
+</p>
+<!-- Security / Encryption Guarantee Badge -->
+<div class="flex items-center gap-1.5 opacity-75">
+<span class="material-symbols-outlined text-[15px] text-tertiary" data-icon="lock" data-weight="fill">lock</span>
+<span class="font-body-sm text-[11px] text-outline font-medium tracking-wide">
+          Secured with 256-bit bank-grade encryption
+        </span>
+</div>
+<!-- iOS Navigation Home Bar Spacer -->
+<div class="w-32 h-1 rounded-full bg-outline-variant/60 mt-1"></div>
+</footer>
+</div>
+<!-- Interactive script for password visibility toggle and form feel -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggleBtn = document.getElementById('togglePassword');
+      const pwdInput = document.getElementById('passwordInput');
+      const eyeIcon = document.getElementById('eyeIcon');
+
+      if (toggleBtn && pwdInput && eyeIcon) {
+        toggleBtn.addEventListener('click', () => {
+          const isPassword = pwdInput.getAttribute('type') === 'password';
+          pwdInput.setAttribute('type', isPassword ? 'text' : 'password');
+          eyeIcon.textContent = isPassword ? 'visibility_off' : 'visibility';
+          if (isPassword) {
+            pwdInput.classList.remove('tracking-widest');
+          } else {
+            pwdInput.classList.add('tracking-widest');
+          }
+        });
+      }
+    });
+  </script>
+</body></html>

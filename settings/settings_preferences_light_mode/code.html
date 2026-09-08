@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Settings &amp; Preferences - Bloom Budget</title>
+<!-- Google Fonts & Material Symbols -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "tertiary-container": "#00855b",
+            "secondary-fixed": "#ffd9dd",
+            "surface-variant": "#e5e1eb",
+            "on-surface-variant": "#5b4043",
+            "on-primary-fixed": "#400012",
+            "primary": "#b80045",
+            "surface-tint": "#bd0047",
+            "surface-container-high": "#ebe6f1",
+            "on-secondary-fixed": "#400014",
+            "tertiary-fixed": "#6ffbbe",
+            "on-background": "#1c1b22",
+            "on-primary": "#ffffff",
+            "error": "#ba1a1a",
+            "inverse-surface": "#312f37",
+            "surface-container-low": "#f6f2fc",
+            "on-tertiary": "#ffffff",
+            "surface-container": "#f1ecf6",
+            "inverse-primary": "#ffb2bc",
+            "primary-fixed-dim": "#ffb2bc",
+            "on-tertiary-fixed-variant": "#005236",
+            "outline": "#8f6f73",
+            "on-secondary-container": "#6b0027",
+            "on-tertiary-container": "#f5fff6",
+            "secondary": "#ad2c4f",
+            "surface-container-highest": "#e5e1eb",
+            "surface-container-lowest": "#ffffff",
+            "on-primary-fixed-variant": "#910034",
+            "on-error": "#ffffff",
+            "secondary-fixed-dim": "#ffb2bd",
+            "error-container": "#ffdad6",
+            "primary-container": "#de245b",
+            "inverse-on-surface": "#f4eff9",
+            "on-tertiary-fixed": "#002113",
+            "tertiary": "#006947",
+            "surface": "#fcf8ff",
+            "tertiary-fixed-dim": "#4edea3",
+            "background": "#fcf8ff",
+            "on-secondary-fixed-variant": "#8c1038",
+            "surface-dim": "#ddd8e3",
+            "outline-variant": "#e3bdc1",
+            "on-primary-container": "#fffbff",
+            "on-error-container": "#93000a",
+            "secondary-container": "#fd6989",
+            "on-surface": "#1c1b22",
+            "on-secondary": "#ffffff",
+            "primary-fixed": "#ffd9dd",
+            "surface-bright": "#fcf8ff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin-tablet": "2rem",
+            "margin-mobile": "1.25rem",
+            "space-2xs": "0.25rem",
+            "space-md": "1rem",
+            "space-3xl": "2.5rem",
+            "gutter-mobile": "1rem",
+            "space-xs": "0.5rem",
+            "space-sm": "0.75rem",
+            "space-2xl": "2rem",
+            "gutter-tablet": "1.5rem",
+            "space-lg": "1.25rem",
+            "space-xl": "1.5rem"
+          },
+          "fontFamily": {
+            "label-card": ["JetBrains Mono"],
+            "body-md": ["Plus Jakarta Sans"],
+            "headline-sm": ["Plus Jakarta Sans"],
+            "display-lg-mobile": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "display-lg": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "label-pill": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "label-numeric": ["JetBrains Mono"],
+            "body-sm": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "label-card": ["12px", { "lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "500" }],
+            "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "headline-sm": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "display-lg-mobile": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+            "headline-md": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+            "headline-lg": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "label-pill": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "700" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "label-numeric": ["15px", { "lineHeight": "20px", "letterSpacing": "-0.02em", "fontWeight": "500" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "400" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .tactile-card {
+      box-shadow: 0 4px 20px -2px rgba(255, 64, 113, 0.06), 0 1px 3px 0 rgba(18, 17, 24, 0.03);
+      border: 1px solid rgba(255, 107, 139, 0.12);
+    }
+    .tactile-float {
+      box-shadow: 0 12px 32px -4px rgba(255, 64, 113, 0.12), 0 4px 8px -2px rgba(18, 17, 24, 0.04);
+    }
+    .badge-rose-gradient {
+      background: linear-gradient(135deg, #FF6B8B 0%, #FF4071 100%);
+      box-shadow: 0 2px 8px rgba(255, 64, 113, 0.3);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface antialiased min-h-screen flex justify-center selection:bg-secondary-fixed selection:text-on-secondary-fixed">
+<!-- Mobile Shell Wrapper (max 480px) -->
+<div class="w-full max-w-[480px] min-h-screen bg-surface flex flex-col relative pb-32">
+<!-- Top App Bar (Shared Components mapped) -->
+<header class="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-margin-mobile h-16 max-w-[480px] mx-auto bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-md shadow-sm">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full overflow-hidden ring-2 ring-outline-variant/30 relative">
+<img class="w-full h-full object-cover" data-alt="Sophisticated, close-up lifestyle portrait of Sarah Jenkins, a professional woman with warm ambient studio lighting, serene expression, soft neutral background tinted with pale rose hues, editorial aesthetics reflecting modern personal finance and luxury curation." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvrzncUMAuOiBAXX7f7j2qWm_LGEMavJk7aglw0M6t1SUhg2N-g4_VQoVZLFWY4ZKgKYDQlZObUqaktrjVBs7LNX0tm38qoCseSWu5glka96UUBLRJkENafxq9ixmqpyEH--ku2etldJyHrtJFDe3ufLgrz6S2wkGsEL-4F47p6tcvbNZ4zxXhD3MC8UKaIkwfzBKiO1bwDzXxkCM7W3XossTf65tT6myhpZRihZ1X0mFuSIrzyBfLjw"/>
+</div>
+<div>
+<h1 class="font-headline-sm text-headline-sm font-bold text-on-surface leading-tight tracking-tight">Settings &amp; Preferences</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Account &amp; System Control</p>
+</div>
+</div>
+<button aria-label="Notifications" class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface-container-high/40 active:scale-95 transition-all text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]" data-icon="notifications">notifications</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 px-margin-mobile pt-20 space-y-space-xl">
+<!-- Profile Summary Bento Card -->
+<section class="tactile-card rounded-2xl bg-surface-container-lowest p-space-lg relative overflow-hidden transition-all duration-200">
+<!-- Ambient subtle pink glow corner -->
+<div class="absolute -top-10 -right-10 w-36 h-36 bg-secondary-fixed/40 rounded-full blur-2xl pointer-events-none"></div>
+<div class="flex items-center justify-between mb-space-md">
+<div class="flex items-center gap-space-md">
+<div class="relative w-14 h-14 rounded-full p-[2px] bg-gradient-to-tr from-primary-container to-secondary-fixed">
+<img class="w-full h-full rounded-full object-cover" data-alt="Polished portrait of Sarah Jenkins against a minimalist, warm porcelain background with soft natural lighting, chic and tailored styling fitting an editorial personal finance application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIuqbrosqWYRBjfHHcZIdhmLeHKrbs0tTq4hVijxMneLIkS9Z3JRE1s8A2FcBrcR3Wr9v6si3wV3z0JVh0KUQzgKKsCwa-7UzTpjlv7ggjlmbWbPfIlIaYyQ-Xdlqu8aT0qqtDiqkQ8fAJkN6axxuIYjNpDsZTwYR0ekjlSqGqa53hjNF7280VIwoWPbZYaNqo8WhP6jIzmX4TuWcOJPz7NXGsfjllDzMPWo_b8eHBP7_fDRSTi81V3g"/>
+<span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-tertiary-container border-2 border-surface-container-lowest rounded-full"></span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h2 class="font-headline-sm text-headline-sm font-bold text-on-surface">Sarah Jenkins</h2>
+<span class="badge-rose-gradient font-label-pill text-label-pill text-on-primary px-2 py-0.5 rounded-full tracking-wider">PRO</span>
+</div>
+<p class="font-label-card text-label-card text-on-surface-variant mt-0.5">sarah.j@bloom.app</p>
+</div>
+</div>
+<button aria-label="Edit Profile" class="w-8 h-8 rounded-full bg-surface-container-low flex items-center justify-center text-primary hover:bg-primary-fixed/40 transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+</div>
+<!-- Metric Pills row -->
+<div class="grid grid-cols-2 gap-space-sm pt-space-xs border-t border-outline-variant/20">
+<div class="flex items-center gap-2 p-2 rounded-xl bg-surface-container-low/60">
+<div class="w-7 h-7 rounded-lg bg-surface-container-lowest flex items-center justify-center text-primary shadow-xs">
+<span class="material-symbols-outlined text-[16px]" data-icon="account_balance_wallet">account_balance_wallet</span>
+</div>
+<div>
+<p class="font-label-pill text-label-pill text-on-surface-variant uppercase">Wallets</p>
+<p class="font-label-numeric text-label-numeric font-semibold text-on-surface">4 Linked</p>
+</div>
+</div>
+<div class="flex items-center gap-2 p-2 rounded-xl bg-surface-container-low/60">
+<div class="w-7 h-7 rounded-lg bg-surface-container-lowest flex items-center justify-center text-secondary shadow-xs">
+<span class="material-symbols-outlined text-[16px]" data-icon="event_repeat">event_repeat</span>
+</div>
+<div>
+<p class="font-label-pill text-label-pill text-on-surface-variant uppercase">Reminders</p>
+<p class="font-label-numeric text-label-numeric font-semibold text-on-surface">7 Active</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 1: Appearance & Display -->
+<section class="space-y-space-xs">
+<div class="flex items-center gap-2 px-1">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="palette">palette</span>
+<h3 class="font-label-pill text-label-pill uppercase text-on-surface-variant tracking-wider">Appearance &amp; Display</h3>
+</div>
+<div class="tactile-card rounded-2xl bg-surface-container-lowest divide-y divide-outline-variant/15 overflow-hidden">
+<!-- Theme Selector -->
+<div class="p-space-md flex flex-col gap-space-xs">
+<span class="font-body-md text-body-md font-semibold text-on-surface">Interface Theme</span>
+<!-- Segmented Pill Selector -->
+<div class="grid grid-cols-3 p-1 rounded-full bg-surface-container-low gap-1 mt-1 border border-outline-variant/15">
+<button class="py-1.5 rounded-full text-center font-label-pill text-label-pill bg-primary text-on-primary shadow-sm font-semibold transition-all">
+                Light
+              </button>
+<button class="py-1.5 rounded-full text-center font-label-pill text-label-pill text-on-surface-variant hover:text-on-surface transition-all">
+                Dark
+              </button>
+<button class="py-1.5 rounded-full text-center font-label-pill text-label-pill text-on-surface-variant hover:text-on-surface transition-all">
+                System
+              </button>
+</div>
+</div>
+<!-- Currency Selector -->
+<div class="p-space-md flex items-center justify-between hover:bg-surface-container-low/40 transition-colors cursor-pointer">
+<div>
+<p class="font-body-md text-body-md font-medium text-on-surface">Primary Currency</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Reporting &amp; display token</p>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="font-label-numeric text-label-numeric px-2.5 py-1 rounded-full bg-surface-container-low text-primary font-semibold border border-outline-variant/30">USD ($)</span>
+<span class="material-symbols-outlined text-outline-variant text-[20px]" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<!-- Haptic Feedback Toggle -->
+<div class="p-space-md flex items-center justify-between">
+<div>
+<p class="font-body-md text-body-md font-medium text-on-surface">Haptic Feedback &amp; Audio</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Soft tactile tap confirmations</p>
+</div>
+<!-- Custom Toggle (ON) -->
+<div class="w-12 h-7 bg-primary rounded-full p-1 flex items-center justify-end cursor-pointer shadow-inner transition-colors">
+<div class="w-5 h-5 bg-on-primary rounded-full shadow-md transform transition-transform"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Wallets & Budget Management -->
+<section class="space-y-space-xs">
+<div class="flex items-center gap-2 px-1">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="account_balance" data-weight="fill" style="font-variation-settings: 'FILL' 1;">account_balance</span>
+<h3 class="font-label-pill text-label-pill uppercase text-on-surface-variant tracking-wider">Wallets &amp; Budgeting</h3>
+</div>
+<div class="tactile-card rounded-2xl bg-surface-container-lowest divide-y divide-outline-variant/15 overflow-hidden">
+<!-- Manage Linked Wallets Row -->
+<div class="p-space-md flex items-center justify-between hover:bg-surface-container-low/40 transition-colors cursor-pointer">
+<div class="space-y-1">
+<p class="font-body-md text-body-md font-medium text-on-surface">Manage Linked Wallets (4)</p>
+<!-- Mini Institution Icons -->
+<div class="flex items-center gap-1.5 pt-0.5">
+<span class="w-5 h-5 rounded-full bg-surface-container flex items-center justify-center font-label-pill text-[9px] font-bold text-on-surface">CH</span>
+<span class="w-5 h-5 rounded-full bg-surface-container flex items-center justify-center font-label-pill text-[9px] font-bold text-on-surface">APL</span>
+<span class="w-5 h-5 rounded-full bg-surface-container flex items-center justify-center font-label-pill text-[9px] font-bold text-on-surface">REV</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">+1</span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<span class="font-label-pill text-label-pill text-primary font-semibold">Reorder</span>
+<span class="material-symbols-outlined text-outline-variant text-[20px]" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<!-- Auto-Categorize Merchants Toggle -->
+<div class="p-space-md flex items-center justify-between">
+<div>
+<p class="font-body-md text-body-md font-medium text-on-surface">Auto-Categorize Merchants</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">ML sorting for lifestyle expenses</p>
+</div>
+<!-- Custom Toggle (ON) -->
+<div class="w-12 h-7 bg-primary rounded-full p-1 flex items-center justify-end cursor-pointer shadow-inner">
+<div class="w-5 h-5 bg-on-primary rounded-full shadow-md"></div>
+</div>
+</div>
+<!-- Default Spend Account -->
+<div class="p-space-md flex items-center justify-between hover:bg-surface-container-low/40 transition-colors cursor-pointer">
+<div>
+<p class="font-body-md text-body-md font-medium text-on-surface">Default Spend Account</p>
+<p class="font-label-card text-label-card text-primary font-semibold mt-0.5">Chase Sapphire •••• 4821</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-[20px]" data-icon="tune">tune</span>
+</div>
+</div>
+</section>
+<!-- Section 3: Reminders & Bill Alerts -->
+<section class="space-y-space-xs">
+<div class="flex items-center gap-2 px-1">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="notifications_active">notifications_active</span>
+<h3 class="font-label-pill text-label-pill uppercase text-on-surface-variant tracking-wider">Reminders &amp; Alerts</h3>
+</div>
+<div class="tactile-card rounded-2xl bg-surface-container-lowest divide-y divide-outline-variant/15 overflow-hidden">
+<!-- Bill Due Notifications -->
+<div class="p-space-md flex items-center justify-between">
+<div>
+<p class="font-body-md text-body-md font-medium text-on-surface">Bill Due Notifications</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">2 days prior at 9:00 AM</p>
+</div>
+<div class="w-12 h-7 bg-primary rounded-full p-1 flex items-center justify-end cursor-pointer shadow-inner">
+<div class="w-5 h-5 bg-on-primary rounded-full shadow-md"></div>
+</div>
+</div>
+<!-- Daily Log Reminder -->
+<div class="p-space-md flex items-center justify-between">
+<div>
+<p class="font-body-md text-body-md font-medium text-on-surface">Daily Log Reminder</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Every evening at 8:30 PM</p>
+</div>
+<div class="w-12 h-7 bg-primary rounded-full p-1 flex items-center justify-end cursor-pointer shadow-inner">
+<div class="w-5 h-5 bg-on-primary rounded-full shadow-md"></div>
+</div>
+</div>
+<!-- Budget Cap Warning -->
+<div class="p-space-md flex items-center justify-between">
+<div>
+<p class="font-body-md text-body-md font-medium text-on-surface">Budget Threshold Warning</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Alert at 80% monthly cap</p>
+</div>
+<div class="w-12 h-7 bg-primary rounded-full p-1 flex items-center justify-end cursor-pointer shadow-inner">
+<div class="w-5 h-5 bg-on-primary rounded-full shadow-md"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 4: Security & Data -->
+<section class="space-y-space-xs">
+<div class="flex items-center gap-2 px-1">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="lock">lock</span>
+<h3 class="font-label-pill text-label-pill uppercase text-on-surface-variant tracking-wider">Security &amp; Data</h3>
+</div>
+<div class="tactile-card rounded-2xl bg-surface-container-lowest divide-y divide-outline-variant/15 overflow-hidden">
+<!-- Face ID Toggle -->
+<div class="p-space-md flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed/50 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]" data-icon="fingerprint">fingerprint</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-medium text-on-surface">Face ID / Biometric Lock</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Require on every session wake</p>
+</div>
+</div>
+<div class="w-12 h-7 bg-primary rounded-full p-1 flex items-center justify-end cursor-pointer shadow-inner">
+<div class="w-5 h-5 bg-on-primary rounded-full shadow-md"></div>
+</div>
+</div>
+<!-- Export Data Action -->
+<div class="p-space-md flex items-center justify-between hover:bg-surface-container-low/40 transition-colors cursor-pointer">
+<div>
+<p class="font-body-md text-body-md font-medium text-on-surface">Export Transactions</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Financial audit files</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-pill text-label-pill bg-surface-container px-2 py-0.5 rounded text-on-surface font-mono">CSV, PDF</span>
+<span class="material-symbols-outlined text-outline-variant text-[20px]" data-icon="download">download</span>
+</div>
+</div>
+<!-- Clear Cache -->
+<div class="p-space-md flex items-center justify-between hover:bg-surface-container-low/40 transition-colors cursor-pointer">
+<div>
+<p class="font-body-md text-body-md font-medium text-on-surface">Clear Cache &amp; Local Data</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Frees up 14.8 MB storage</p>
+</div>
+<span class="material-symbols-outlined text-outline text-[20px]" data-icon="cached">cached</span>
+</div>
+</div>
+</section>
+<!-- Log Out & Meta -->
+<section class="space-y-space-md pt-space-xs text-center">
+<button class="w-full py-3.5 rounded-full font-headline-sm text-body-md font-semibold text-secondary hover:bg-secondary-fixed/40 active:scale-98 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="logout">logout</span>
+          Log Out
+        </button>
+<div class="flex items-center justify-center gap-1.5 text-on-surface-variant font-label-card text-body-sm opacity-80">
+<span>Bloom Budget v2.4.1 (Build 108)</span>
+<span>•</span>
+<span class="material-symbols-outlined text-[14px] text-primary" data-icon="favorite" data-weight="fill" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar (Executed strictly from Shared Components JSON) -->
+<!-- Screen intent is 'Settings', so tab 'Settings' is given style_active_navigation -->
+<nav class="fixed bottom-0 left-0 right-0 w-full z-50 flex justify-around items-center px-space-xs py-space-xs max-w-[480px] mx-auto bg-surface-container-lowest/90 dark:bg-inverse-surface/90 backdrop-blur-xl rounded-t-xl shadow-lg">
+<!-- Destination 1: Dashboard -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1.5 hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined text-[22px]" data-icon="dashboard">dashboard</span>
+<span class="font-label-pill text-label-pill mt-0.5">Dashboard</span>
+</a>
+<!-- Destination 2: Wallets -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1.5 hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined text-[22px]" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-label-pill text-label-pill mt-0.5">Wallets</span>
+</a>
+<!-- Destination 3: Reminders -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1.5 hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined text-[22px]" data-icon="event_repeat">event_repeat</span>
+<span class="font-label-pill text-label-pill mt-0.5">Reminders</span>
+</a>
+<!-- Destination 4: Settings (ACTIVE) -->
+<a class="flex flex-col items-center justify-center bg-primary-fixed/60 dark:bg-primary/20 text-primary dark:text-primary-fixed rounded-full px-3 py-1.5 transition-all" href="#">
+<span class="material-symbols-outlined text-[22px]" data-icon="tune" data-weight="fill" style="font-variation-settings: 'FILL' 1;">tune</span>
+<span class="font-label-pill text-label-pill mt-0.5 font-bold">Settings</span>
+</a>
+</nav>
+</div>
+</body></html>

@@ -6,6 +6,10 @@ config.resolver.extraNodeModules = {
   buffer: require.resolve('buffer/'),
 };
 
-config.resolver.sourceExts = ['jsx', 'js', 'ts', 'tsx', 'cjs', 'json'];
+// Keep Expo's default extensions
+config.resolver.sourceExts = [
+  ...config.resolver.sourceExts,
+  'cjs'
+];
 
 module.exports = config;
