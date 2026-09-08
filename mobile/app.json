@@ -28,23 +28,20 @@
         "foregroundImage": "./assets/splash.png",
         "backgroundColor": "#fcf8ff"
       },
-      "package": "com.bloom.budget"
+      "package": "com.bloom.budget",
+      "versionCode": 5
     },
-    "plugins": [
-      "@react-native-firebase/app",
-      "@react-native-firebase/auth",
-      [
-        "@react-native-google-signin/google-signin",
-        {
-          "iosUrlScheme": "com.googleusercontent.apps.323697297833-9jc56ej04v6qbcd7e8od4bjdtn858i11"
-        }
-      ]
-    ],
+    "plugins": [],
+    "notification": {
+      "icon": "./assets/splash.png",
+      "color": "#FF6B8B",
+      "androidMode": "default",
+      "androidCollapsedTitle": "Bloom Budget"
+    },
     "extra": {
       "eas": {
         "projectId": "e7d314fd-f950-4032-ad33-dd6dc2e873a2"
-      },
-      "firebaseWebClientId": "323697297833-lfp1k5m0d4paehd11lm93jagngcru1je.apps.googleusercontent.com"
+      }
     }
   }
 }

@@ -1,13 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Pressable, ScrollView, TextInput, Alert, Modal, Image, Animated, KeyboardAvoidingView, Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Font from 'expo-font';
 import * as LocalAuthentication from 'expo-local-authentication';
 import * as SplashScreen from 'expo-splash-screen';
+import * as Notifications from 'expo-notifications';
 import { Calendar } from 'react-native-calendars';
-import { GoogleSignin } from './firebaseConfig';
 import {
   PlusJakartaSans_400Regular,
   PlusJakartaSans_600SemiBold,
@@ -56,7 +56,16 @@ import {
   RotateCcw,
 } from 'lucide-react-native';
 
-const auth = require('@react-native-firebase/auth').default;
+// Configure notification handler
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+    shouldShowBanner: true,
+    shouldShowList: true,
+  }),
+});
 
 interface Account {
   id: number;
@@ -91,6 +100,9 @@ interface Reminder {
   isPaid: boolean;
   paidDate?: string;
   icon: string;
+  notificationId?: string; // 2-day advance notification
+  dueDateNotificationId?: string; // Due date notification
+  snoozedUntil?: string; // Date when snooze expires (YYYY-MM-DD)
 }
 
 const STORAGE_KEY_ACCOUNTS = '@bloom_budget_accounts';
@@ -122,10 +134,13 @@ export default function App() {
   // Auth states
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [showLogin, setShowLogin] = useState(false);
-  const [loginEmail, setLoginEmail] = useState('');
-  const [loginPassword, setLoginPassword] = useState('');
-  const [isRegistering, setIsRegistering] = useState(false);
+  const [showSetup, setShowSetup] = useState(false); // First time setup
+  const [setupStep, setSetupStep] = useState<'name' | 'pin' | 'biometric'>('name');
+  const [setupName, setSetupName] = useState('');
+  const [setupPin, setSetupPin] = useState('');
+  const [setupPinConfirm, setSetupPinConfirm] = useState('');
+  const [showPinEntry, setShowPinEntry] = useState(false); // PIN entry screen
+  const [enteredPin, setEnteredPin] = useState('');
   const [showBiometricSetup, setShowBiometricSetup] = useState(false);
   const [userName, setUserName] = useState('Hey, You');
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -201,6 +216,93 @@ export default function App() {
     initializeApp();
   }, []);
 
+  // Request notification permissions
+  const requestNotificationPermissions = async () => {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    
+    return finalStatus === 'granted';
+  };
+
+  // Schedule notification for a reminder (both advance and due date)
+  const scheduleReminderNotification = async (reminder: Reminder) => {
+    if (!billNotificationsEnabled) return { advanceNotif: null, dueDateNotif: null };
+
+    const hasPermission = await requestNotificationPermissions();
+    if (!hasPermission) {
+      Alert.alert('Permissions Required', 'Please enable notifications in settings to receive bill reminders.');
+      return { advanceNotif: null, dueDateNotif: null };
+    }
+
+    const dueDate = new Date(reminder.dueDate);
+    const now = new Date();
+    
+    // 1. Schedule advance notification (2 days before at 9:00 AM)
+    const advanceDate = new Date(dueDate);
+    advanceDate.setDate(advanceDate.getDate() - 2);
+    advanceDate.setHours(9, 0, 0, 0);
+    
+    let advanceNotifId: string | null = null;
+    if (advanceDate > now) {
+      try {
+        advanceNotifId = await Notifications.scheduleNotificationAsync({
+          content: {
+            title: '💸 Bill Due Soon',
+            body: `${reminder.name} - ₱${reminder.amount.toFixed(2)} due in 2 days`,
+            data: { reminderId: reminder.id, type: 'advance' },
+            sound: true,
+          },
+          trigger: {
+            type: Notifications.SchedulableTriggerInputTypes.DATE,
+            date: advanceDate,
+          },
+        });
+      } catch (error) {
+        console.error('Failed to schedule advance notification:', error);
+      }
+    }
+
+    // 2. Schedule due date notification (on due date at 9:00 AM)
+    const dueDateNotif = new Date(dueDate);
+    dueDateNotif.setHours(9, 0, 0, 0);
+    
+    let dueDateNotifId: string | null = null;
+    if (dueDateNotif > now) {
+      try {
+        dueDateNotifId = await Notifications.scheduleNotificationAsync({
+          content: {
+            title: '� Bill Due Today',
+            body: `${reminder.name} - ₱${reminder.amount.toFixed(2)} is due today!`,
+            data: { reminderId: reminder.id, type: 'dueDate' },
+            sound: true,
+          },
+          trigger: {
+            type: Notifications.SchedulableTriggerInputTypes.DATE,
+            date: dueDateNotif,
+          },
+        });
+      } catch (error) {
+        console.error('Failed to schedule due date notification:', error);
+      }
+    }
+
+    return { advanceNotif: advanceNotifId, dueDateNotif: dueDateNotifId };
+  };
+
+  // Cancel a scheduled notification
+  const cancelReminderNotification = async (notificationId: string) => {
+    try {
+      await Notifications.cancelScheduledNotificationAsync(notificationId);
+    } catch (error) {
+      console.error('Failed to cancel notification:', error);
+    }
+  };
+
   const initializeApp = async () => {
     try {
       await SplashScreen.preventAutoHideAsync();
@@ -217,161 +319,130 @@ export default function App() {
   };
 
   const checkAuth = async () => {
-    const authToken = await AsyncStorage.getItem('@bloom_auth_token');
+    const hasPin = await AsyncStorage.getItem('@bloom_pin');
     const username = await AsyncStorage.getItem('@bloom_user_name');
     
-    if (authToken) {
-      // Load username first
-      if (username) setUserName(username);
-      
-      // Check if biometric is enabled - prompt BEFORE showing dashboard
-      const biometricEnabledStr = await AsyncStorage.getItem('biometricEnabled');
-      if (biometricEnabledStr === 'true') {
-        const result = await LocalAuthentication.authenticateAsync({
-          promptMessage: 'Authenticate to access Bloom Budget',
-          fallbackLabel: 'Use passcode',
-        });
+    if (!hasPin) {
+      // First time user - show setup
+      setShowSetup(true);
+      return;
+    }
+    
+    // Existing user
+    if (username) setUserName(username);
+    
+    // Check if biometric is enabled - if yes, try biometric FIRST
+    const biometricEnabledStr = await AsyncStorage.getItem('biometricEnabled');
+    if (biometricEnabledStr === 'true') {
+      const isSupported = await checkBiometricSupport();
+      if (isSupported) {
+        // Show PIN entry screen in background first
+        setShowPinEntry(true);
         
-        if (result.success) {
-          // Biometric success - show dashboard
-          setIsAuthenticated(true);
-        } else {
-          // Biometric failed - show login
-          setIsAuthenticated(false);
-          setShowLogin(true);
-        }
-      } else {
-        // No biometric enabled - go straight to dashboard
-        setIsAuthenticated(true);
+        // Small delay to let PIN screen render, then trigger biometric
+        setTimeout(async () => {
+          const result = await LocalAuthentication.authenticateAsync({
+            promptMessage: 'Unlock Bloom Budget',
+            fallbackLabel: 'Use PIN',
+            cancelLabel: 'Cancel',
+          });
+          
+          if (result.success) {
+            // Biometric success - go to dashboard
+            setIsAuthenticated(true);
+            setShowPinEntry(false);
+          }
+          // If failed/cancelled, PIN entry screen is already showing
+        }, 100);
+        return;
       }
-    } else {
-      // No auth token - show login
-      setShowLogin(true);
+    }
+    
+    // No biometric enabled - show PIN entry
+    setShowPinEntry(true);
+  };
+
+  const handleSetupComplete = async () => {
+    // Validate based on current step
+    if (setupStep === 'name') {
+      if (!setupName.trim()) {
+        Alert.alert('Error', 'Please enter your full name');
+        return;
+      }
+      setSetupStep('pin');
+    } else if (setupStep === 'pin') {
+      if (setupPin.length !== 4) {
+        Alert.alert('Error', 'PIN must be 4 digits');
+        return;
+      }
+      if (!setupPinConfirm) {
+        Alert.alert('Confirm PIN', 'Please re-enter your PIN to confirm');
+        return;
+      }
+      if (setupPin !== setupPinConfirm) {
+        Alert.alert('Error', 'PINs do not match');
+        setSetupPinConfirm('');
+        return;
+      }
+      
+      // Save name and PIN
+      await AsyncStorage.setItem('@bloom_user_name', setupName.trim());
+      await AsyncStorage.setItem('@bloom_pin', setupPin);
+      setUserName(setupName.trim());
+      
+      // Check if biometric is available
+      const isSupported = await checkBiometricSupport();
+      if (isSupported) {
+        setSetupStep('biometric');
+      } else {
+        // No biometric available, complete setup
+        setShowSetup(false);
+        setIsAuthenticated(true);
+        await AsyncStorage.setItem('@bloom_budget_onboarding_complete', 'false');
+        setShowOnboarding(true);
+      }
+    } else if (setupStep === 'biometric') {
+      // Complete setup
+      setShowSetup(false);
+      setIsAuthenticated(true);
+      await AsyncStorage.setItem('@bloom_budget_onboarding_complete', 'false');
+      setShowOnboarding(true);
     }
   };
 
-  const handleLogin = async () => {
-    if (!loginEmail || !loginPassword) {
-      Alert.alert('Error', 'Please enter email and password');
+  const handlePinEntry = async () => {
+    if (enteredPin.length !== 4) {
+      Alert.alert('Error', 'Please enter your 4-digit PIN');
       return;
     }
-
-    // Simple demo auth - in production, use Firebase
-    if (loginPassword.length >= 6) {
-      const authToken = Date.now().toString();
-      await AsyncStorage.setItem('@bloom_auth_token', authToken);
-      await AsyncStorage.setItem('@bloom_user_email', loginEmail);
-      
-      const name = loginEmail.split('@')[0];
-      await AsyncStorage.setItem('@bloom_user_name', name);
-      setUserName(name);
-      
+    
+    const savedPin = await AsyncStorage.getItem('@bloom_pin');
+    if (enteredPin === savedPin) {
       setIsAuthenticated(true);
-      setShowLogin(false);
-      
-      // Check if first time user
-      const hasSeenOnboarding = await AsyncStorage.getItem('@bloom_budget_onboarding_complete');
-      if (!hasSeenOnboarding) {
-        // First time - offer biometric setup
-        const isSupported = await checkBiometricSupport();
-        if (isSupported) {
-          setShowBiometricSetup(true);
-        } else {
-          setShowOnboarding(true);
-        }
-      }
-      
-      Alert.alert('Welcome!', `Signed in as ${name}`);
+      setShowPinEntry(false);
+      setEnteredPin('');
     } else {
-      Alert.alert('Error', 'Password must be at least 6 characters');
+      Alert.alert('Wrong PIN', 'The PIN you entered is incorrect');
+      setEnteredPin('');
     }
   };
 
   const handleLogout = async () => {
     Alert.alert(
       'Logout',
-      'Are you sure you want to sign out?',
+      'Are you sure you want to sign out? You will need your PIN to sign back in.',
       [
         { text: 'Cancel', style: 'cancel' },
         {
           text: 'Logout',
           style: 'destructive',
           onPress: async () => {
-            // Sign out from Firebase
-            await auth().signOut();
-            // Sign out from Google
-            try {
-              await GoogleSignin.signOut();
-            } catch (error) {
-              // User might not be signed in with Google
-              console.log('Google sign-out skipped');
-            }
-            // Clear local storage
-            await AsyncStorage.removeItem('@bloom_auth_token');
-            await AsyncStorage.removeItem('@bloom_user_email');
-            await AsyncStorage.removeItem('@bloom_user_name');
             setIsAuthenticated(false);
-            setShowLogin(true);
-            setLoginEmail('');
-            setLoginPassword('');
+            setShowPinEntry(true);
           },
         },
       ]
     );
-  };
-
-  const handleGoogleSignIn = async () => {
-    try {
-      // Check if device supports Google Play services
-      await GoogleSignin.hasPlayServices();
-      
-      // Get user info from Google
-      const userInfo = await GoogleSignin.signIn();
-      
-      // Get Google credential
-      const { idToken } = userInfo.data!;
-      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-      
-      // Sign in with Firebase
-      const userCredential = await auth().signInWithCredential(googleCredential);
-      const user = userCredential.user;
-      
-      // Save auth info
-      const authToken = await user.getIdToken();
-      await AsyncStorage.setItem('@bloom_auth_token', authToken);
-      await AsyncStorage.setItem('@bloom_user_email', user.email || '');
-      await AsyncStorage.setItem('@bloom_user_name', user.displayName || user.email?.split('@')[0] || 'User');
-      
-      setUserName(user.displayName || user.email?.split('@')[0] || 'User');
-      setIsAuthenticated(true);
-      setShowLogin(false);
-      
-      // Check if first time user
-      const hasSeenOnboarding = await AsyncStorage.getItem('@bloom_budget_onboarding_complete');
-      if (!hasSeenOnboarding) {
-        const isSupported = await checkBiometricSupport();
-        if (isSupported) {
-          setShowBiometricSetup(true);
-        } else {
-          setShowOnboarding(true);
-        }
-      }
-      
-      Alert.alert('Welcome!', `Signed in as ${user.displayName || user.email}`);
-    } catch (error: any) {
-      if (error.code === 'sign_in_cancelled') {
-        // User cancelled the login flow
-        console.log('User cancelled Google Sign-In');
-      } else if (error.code === 'in_progress') {
-        // Operation already in progress
-        Alert.alert('Please wait', 'Sign-in already in progress');
-      } else if (error.code === 'play_services_not_available') {
-        Alert.alert('Error', 'Google Play Services not available or outdated');
-      } else {
-        console.error('Google Sign-In Error:', error);
-        Alert.alert('Error', 'Failed to sign in with Google. Please try again.');
-      }
-    }
   };
 
   // Animate onboarding step changes
@@ -671,7 +742,7 @@ export default function App() {
     );
   };
 
-  const addReminder = () => {
+  const addReminder = async () => {
     if (!newReminderName || !newReminderAmount || !newReminderAccount || !newReminderDueDate) {
       Alert.alert('Error', 'Please fill in all required fields including date');
       return;
@@ -706,6 +777,11 @@ export default function App() {
       icon: newReminderIcon,
     };
 
+    // Schedule notification if enabled
+    const { advanceNotif, dueDateNotif } = await scheduleReminderNotification(newReminder);
+    if (advanceNotif) newReminder.notificationId = advanceNotif;
+    if (dueDateNotif) newReminder.dueDateNotificationId = dueDateNotif;
+
     saveReminders([newReminder, ...reminders]);
     setShowAddReminder(false);
     setNewReminderName('');
@@ -718,7 +794,18 @@ export default function App() {
     Alert.alert('Success', 'Reminder created!');
   };
 
-  const markReminderAsPaid = (id: number) => {
+  const markReminderAsPaid = async (id: number) => {
+    const reminder = reminders.find(r => r.id === id);
+    if (reminder) {
+      // Cancel both notifications
+      if (reminder.notificationId) {
+        await cancelReminderNotification(reminder.notificationId);
+      }
+      if (reminder.dueDateNotificationId) {
+        await cancelReminderNotification(reminder.dueDateNotificationId);
+      }
+    }
+    
     const updatedReminders = reminders.map(r =>
       r.id === id ? { ...r, isPaid: true, paidDate: new Date().toISOString() } : r
     );
@@ -726,11 +813,59 @@ export default function App() {
     Alert.alert('Success', 'Marked as paid!');
   };
 
-  const snoozeReminder = (id: number) => {
-    Alert.alert('Snoozed', 'Reminder snoozed for 3 days');
+  const snoozeReminder = async (id: number) => {
+    const reminder = reminders.find(r => r.id === id);
+    if (!reminder) return;
+
+    // Calculate snooze date (3 days from now)
+    const snoozeDate = new Date();
+    snoozeDate.setDate(snoozeDate.getDate() + 3);
+    const snoozeDateString = snoozeDate.toISOString().split('T')[0];
+
+    // Cancel existing notification if it exists
+    if (reminder.notificationId) {
+      await cancelReminderNotification(reminder.notificationId);
+    }
+
+    // Schedule new notification for snoozed date
+    let newNotificationId: string | null = null;
+    if (billNotificationsEnabled) {
+      const notificationDate = new Date(snoozeDate);
+      notificationDate.setHours(9, 0, 0, 0); // 9:00 AM on snooze date
+
+      try {
+        newNotificationId = await Notifications.scheduleNotificationAsync({
+          content: {
+            title: '🔔 Snoozed Reminder',
+            body: `${reminder.name} - ₱${reminder.amount.toFixed(2)}`,
+            data: { reminderId: reminder.id },
+            sound: true,
+          },
+          trigger: {
+            type: Notifications.SchedulableTriggerInputTypes.DATE,
+            date: notificationDate,
+          },
+        });
+      } catch (error) {
+        console.error('Failed to schedule snooze notification:', error);
+      }
+    }
+
+    // Update reminder with snooze info
+    const updatedReminders = reminders.map(r =>
+      r.id === id
+        ? {
+            ...r,
+            snoozedUntil: snoozeDateString,
+            notificationId: newNotificationId || undefined,
+          }
+        : r
+    );
+    saveReminders(updatedReminders);
+    Alert.alert('Snoozed', `Reminder snoozed for 3 days (until ${snoozeDateString})`);
   };
 
-  const dismissReminder = (id: number) => {
+  const dismissReminder = async (id: number) => {
     Alert.alert(
       'Dismiss Reminder',
       'This will remove the reminder from your list. Continue?',
@@ -739,7 +874,17 @@ export default function App() {
         {
           text: 'Dismiss',
           style: 'destructive',
-          onPress: () => {
+          onPress: async () => {
+            const reminder = reminders.find(r => r.id === id);
+            if (reminder) {
+              // Cancel both notifications
+              if (reminder.notificationId) {
+                await cancelReminderNotification(reminder.notificationId);
+              }
+              if (reminder.dueDateNotificationId) {
+                await cancelReminderNotification(reminder.dueDateNotificationId);
+              }
+            }
             const newReminders = reminders.filter(r => r.id !== id);
             saveReminders(newReminders);
             Alert.alert('Dismissed', 'Reminder has been removed');
@@ -749,7 +894,7 @@ export default function App() {
     );
   };
 
-  const deleteReminder = (id: number) => {
+  const deleteReminder = async (id: number) => {
     Alert.alert(
       'Delete Reminder',
       'Are you sure you want to delete this recurring reminder?',
@@ -758,7 +903,17 @@ export default function App() {
         {
           text: 'Delete',
           style: 'destructive',
-          onPress: () => {
+          onPress: async () => {
+            const reminder = reminders.find(r => r.id === id);
+            if (reminder) {
+              // Cancel both notifications
+              if (reminder.notificationId) {
+                await cancelReminderNotification(reminder.notificationId);
+              }
+              if (reminder.dueDateNotificationId) {
+                await cancelReminderNotification(reminder.dueDateNotificationId);
+              }
+            }
             const newReminders = reminders.filter(r => r.id !== id);
             saveReminders(newReminders);
           },
@@ -1182,18 +1337,18 @@ export default function App() {
             <View style={[styles.summaryIcon, { backgroundColor: '#E8F5F0' }]}>
               <ArrowDown size={18} color="#006947" />
             </View>
-            <View>
+            <View style={{ flex: 1 }}>
               <Text style={[styles.summaryLabel, isDarkMode && styles.textDark]}>Income</Text>
-              <Text style={styles.summaryAmountPositive}>+₱{formatAmount(totalIncome)}</Text>
+              <Text style={styles.summaryAmountPositive} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>+₱{formatAmount(totalIncome)}</Text>
             </View>
           </View>
           <View style={[styles.summaryPill, isDarkMode && styles.summaryPillDark]}>
             <View style={[styles.summaryIcon, { backgroundColor: '#FFE5EC' }]}>
               <ArrowUp size={18} color="#b80045" />
             </View>
-            <View>
+            <View style={{ flex: 1 }}>
               <Text style={[styles.summaryLabel, isDarkMode && styles.textDark]}>Expenses</Text>
-              <Text style={styles.summaryAmountNegative}>-₱{formatAmount(totalExpenses)}</Text>
+              <Text style={styles.summaryAmountNegative} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>-₱{formatAmount(totalExpenses)}</Text>
             </View>
           </View>
         </View>
@@ -1215,7 +1370,12 @@ export default function App() {
         </View>
 
         {/* Wallet Cards Horizontal Scroll */}
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.walletScroll}>
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false} 
+          style={styles.walletScroll}
+          contentContainerStyle={{ paddingRight: 24 }}
+        >
           {accounts.map((account) => (
             <TouchableOpacity activeOpacity={1}
               key={account.id}
@@ -1487,13 +1647,21 @@ export default function App() {
     const monthName = currentDate.toLocaleString('default', { month: 'long', year: 'numeric' });
     
     // Filter reminders based on current filter
-    let filteredReminders = reminders;
+    const today = new Date().toISOString().split('T')[0];
+    let filteredReminders = reminders.filter(r => {
+      // Hide snoozed reminders until snooze date passes
+      if (r.snoozedUntil && r.snoozedUntil > today) {
+        return false;
+      }
+      return true;
+    });
+    
     if (reminderFilter === 'upcoming') {
-      filteredReminders = reminders.filter(r => !r.isPaid);
+      filteredReminders = filteredReminders.filter(r => !r.isPaid);
     } else if (reminderFilter === 'subscription') {
-      filteredReminders = reminders.filter(r => r.category === 'subscription');
+      filteredReminders = filteredReminders.filter(r => r.category === 'subscription');
     } else if (reminderFilter === 'utility') {
-      filteredReminders = reminders.filter(r => r.category === 'utility' || r.category === 'rent');
+      filteredReminders = filteredReminders.filter(r => r.category === 'utility' || r.category === 'rent');
     }
 
     // Separate paid and unpaid, sort by date
@@ -1840,8 +2008,8 @@ export default function App() {
               <View style={styles.profileStatusDot} />
             </View>
             <View>
-              <Text style={[styles.profileName, isDarkMode && styles.textDark]}>Hey, You ✨</Text>
-              <Text style={[styles.profileEmail, isDarkMode && styles.textMutedDark]}>bloom.user@app.com</Text>
+              <Text style={[styles.profileName, isDarkMode && styles.textDark]}>{userName} ✨</Text>
+              <Text style={[styles.profileEmail, isDarkMode && styles.textMutedDark]}>Bloom Budget User</Text>
             </View>
           </View>
         </View>
@@ -1959,9 +2127,41 @@ export default function App() {
         <View style={[styles.settingsCard, isDarkMode && styles.settingsCardDark]}>
           <TouchableOpacity activeOpacity={0.7}
             style={styles.settingsRow}
-            onPress={() => {
-              setBillNotificationsEnabled(!billNotificationsEnabled);
-              AsyncStorage.setItem('billNotifications', (!billNotificationsEnabled).toString());
+            onPress={async () => {
+              const newValue = !billNotificationsEnabled;
+              setBillNotificationsEnabled(newValue);
+              await AsyncStorage.setItem('billNotifications', newValue.toString());
+              
+              if (newValue) {
+                // Re-enable notifications: schedule for all unpaid reminders
+                const hasPermission = await requestNotificationPermissions();
+                if (hasPermission) {
+                  const updatedReminders = await Promise.all(
+                    reminders.map(async (reminder) => {
+                      if (!reminder.isPaid && !reminder.snoozedUntil) {
+                        const { advanceNotif, dueDateNotif } = await scheduleReminderNotification(reminder);
+                        return {
+                          ...reminder,
+                          notificationId: advanceNotif || undefined,
+                          dueDateNotificationId: dueDateNotif || undefined,
+                        };
+                      }
+                      return reminder;
+                    })
+                  );
+                  saveReminders(updatedReminders);
+                  Alert.alert('Enabled', 'Bill notifications have been enabled');
+                }
+              } else {
+                // Disable notifications: cancel all scheduled notifications
+                await Promise.all(
+                  reminders.flatMap(r => [
+                    r.notificationId ? cancelReminderNotification(r.notificationId) : null,
+                    r.dueDateNotificationId ? cancelReminderNotification(r.dueDateNotificationId) : null,
+                  ].filter(Boolean))
+                );
+                Alert.alert('Disabled', 'Bill notifications have been disabled');
+              }
             }}
           >
             <View style={{ flex: 1 }}>
@@ -2119,155 +2319,287 @@ export default function App() {
     </ScrollView>
   );
 
-  const renderLogin = () => (
-    <KeyboardAvoidingView 
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      style={[styles.container, isDarkMode && styles.containerDark]}
-    >
-      <ScrollView style={[styles.content, isDarkMode && styles.contentDark]} contentContainerStyle={{ flexGrow: 1 }}>
-        {/* Ambient glow effects */}
-        <View style={styles.ambientGlow1} />
-        <View style={styles.ambientGlow2} />
-        
-        {/* Header */}
-        <View style={styles.loginHeader}>
-          <TouchableOpacity activeOpacity={0.7} onPress={() => Alert.alert('Help', 'Contact support@bloombudget.app')}>
-            <Text style={[styles.loginHeaderButton, isDarkMode && styles.textDark]}>Help</Text>
-          </TouchableOpacity>
-        </View>
+  // Render setup screen for first-time users
+  const renderSetup = () => {
+    if (setupStep === 'name') {
+      return (
+        <KeyboardAvoidingView 
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={[styles.container, isDarkMode && styles.containerDark]}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+        >
+          <TouchableOpacity 
+            activeOpacity={1} 
+            style={{ flex: 1 }}
+            onPress={() => {}}
+          >
+            <ScrollView 
+              style={[styles.content, isDarkMode && styles.contentDark]} 
+              contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', padding: 24 }}
+              keyboardShouldPersistTaps="handled"
+            >
+              <View style={styles.ambientGlow1} />
+              <View style={styles.ambientGlow2} />
+              
+              <View style={styles.loginBrandSection}>
+                <Image 
+                  source={require('./assets/splash.png')} 
+                  style={styles.loginLogo}
+                  resizeMode="contain"
+                />
+                <Text style={[styles.loginTitle, isDarkMode && styles.textDark, { marginTop: 24 }]}>Welcome to Bloom Budget!</Text>
+                <Text style={[styles.loginSubtitle, isDarkMode && styles.textMutedDark, { marginTop: 8 }]}>
+                  Let's get you set up
+                </Text>
+              </View>
 
-        {/* Brand section */}
-        <View style={styles.loginBrandSection}>
-          <View style={styles.loginLogoContainer}>
+              <View style={[styles.loginFormCard, isDarkMode && styles.loginFormCardDark, { marginTop: 40 }]}>
+                <Text style={[styles.loginFormTitle, isDarkMode && styles.textDark]}>What's your name?</Text>
+                <Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark, { marginTop: 16 }]}>FULL NAME</Text>
+                <TextInput
+                  style={[styles.loginInput, isDarkMode && styles.loginInputDark]}
+                  value={setupName}
+                  onChangeText={setSetupName}
+                  placeholder="John Doe"
+                  placeholderTextColor={isDarkMode ? "#7a6f73" : "#8f6f73"}
+                  autoCapitalize="words"
+                  autoFocus
+                  returnKeyType="next"
+                  onSubmitEditing={handleSetupComplete}
+                />
+
+                <TouchableOpacity activeOpacity={0.8} onPress={handleSetupComplete} style={{ marginTop: 24 }}>
+                  <LinearGradient
+                    colors={['#FF6B8B', '#FF4071']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    style={styles.loginButton}
+                  >
+                    <Text style={styles.loginButtonText}>Continue</Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
+      );
+    } else if (setupStep === 'pin') {
+      return (
+        <KeyboardAvoidingView 
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={[styles.container, isDarkMode && styles.containerDark]}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+        >
+          <TouchableOpacity 
+            activeOpacity={1} 
+            style={{ flex: 1 }}
+            onPress={() => {}}
+          >
+            <ScrollView 
+              style={[styles.content, isDarkMode && styles.contentDark]} 
+              contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', padding: 24 }}
+              keyboardShouldPersistTaps="handled"
+            >
+              <View style={styles.ambientGlow1} />
+              <View style={styles.ambientGlow2} />
+              
+              <View style={styles.loginBrandSection}>
+                <Lock size={64} color="#FF6B8B" />
+                <Text style={[styles.loginTitle, isDarkMode && styles.textDark, { marginTop: 24 }]}>Create Your PIN</Text>
+                <Text style={[styles.loginSubtitle, isDarkMode && styles.textMutedDark, { marginTop: 8 }]}>
+                  Secure your account with a 4-digit PIN
+                </Text>
+              </View>
+
+              <View style={[styles.loginFormCard, isDarkMode && styles.loginFormCardDark, { marginTop: 40 }]}>
+                <Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>ENTER PIN</Text>
+                <TextInput
+                  style={[styles.loginInput, isDarkMode && styles.loginInputDark, { fontSize: 24, textAlign: 'center', letterSpacing: 12 }]}
+                  value={setupPin}
+                  onChangeText={(text) => setSetupPin(text.replace(/[^0-9]/g, '').slice(0, 4))}
+                  placeholder="••••"
+                  placeholderTextColor={isDarkMode ? "#7a6f73" : "#8f6f73"}
+                  keyboardType="number-pad"
+                  maxLength={4}
+                  secureTextEntry
+                  autoFocus
+                  returnKeyType="next"
+                />
+
+                {setupPin.length === 4 && (
+                  <>
+                    <Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark, { marginTop: 24 }]}>CONFIRM PIN</Text>
+                    <TextInput
+                      style={[styles.loginInput, isDarkMode && styles.loginInputDark, { fontSize: 24, textAlign: 'center', letterSpacing: 12 }]}
+                      value={setupPinConfirm}
+                      onChangeText={(text) => setSetupPinConfirm(text.replace(/[^0-9]/g, '').slice(0, 4))}
+                      placeholder="••••"
+                      placeholderTextColor={isDarkMode ? "#7a6f73" : "#8f6f73"}
+                      keyboardType="number-pad"
+                      maxLength={4}
+                      secureTextEntry
+                      returnKeyType="done"
+                      onSubmitEditing={handleSetupComplete}
+                    />
+                  </>
+                )}
+
+                <TouchableOpacity 
+                  activeOpacity={0.8} 
+                  onPress={handleSetupComplete} 
+                  style={{ marginTop: 24 }}
+                  disabled={setupPin.length !== 4 || setupPinConfirm.length !== 4}
+                >
+                  <LinearGradient
+                    colors={setupPin.length === 4 && setupPinConfirm.length === 4 ? ['#FF6B8B', '#FF4071'] : ['#ccc', '#aaa']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    style={styles.loginButton}
+                  >
+                    <Text style={styles.loginButtonText}>Continue</Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
+      );
+    } else if (setupStep === 'biometric') {
+      return (
+        <View style={[styles.container, isDarkMode && styles.containerDark, { justifyContent: 'center', padding: 24 }]}>
+          <View style={styles.ambientGlow1} />
+          <View style={styles.ambientGlow2} />
+          
+          <View style={{ alignItems: 'center' }}>
+            <Fingerprint size={80} color="#FF6B8B" />
+            <Text style={[styles.loginTitle, isDarkMode && styles.textDark, { marginTop: 32, textAlign: 'center' }]}>
+              Enable Biometric Authentication?
+            </Text>
+            <Text style={[styles.loginSubtitle, isDarkMode && styles.textMutedDark, { marginTop: 12, textAlign: 'center' }]}>
+              Unlock faster with Face ID or Fingerprint
+            </Text>
+
+            <TouchableOpacity 
+              activeOpacity={0.8} 
+              onPress={async () => {
+                await toggleBiometric();
+                handleSetupComplete();
+              }} 
+              style={{ marginTop: 40, width: '100%' }}
+            >
+              <LinearGradient
+                colors={['#FF6B8B', '#FF4071']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.loginButton}
+              >
+                <Text style={styles.loginButtonText}>Enable Biometric</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              activeOpacity={0.7} 
+              onPress={handleSetupComplete}
+              style={{ marginTop: 16 }}
+            >
+              <Text style={[styles.loginToggleText, isDarkMode && styles.textMutedDark]}>Skip for now</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      );
+    }
+  };
+
+  // Render PIN entry screen
+  const renderPinEntry = () => (
+    <KeyboardAvoidingView 
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={[styles.container, isDarkMode && styles.containerDark]}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+    >
+      <TouchableOpacity 
+        activeOpacity={1} 
+        style={{ flex: 1 }}
+        onPress={() => {}}
+      >
+        <ScrollView 
+          style={[styles.content, isDarkMode && styles.contentDark]} 
+          contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', padding: 24 }}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.ambientGlow1} />
+          <View style={styles.ambientGlow2} />
+          
+          <View style={{ alignItems: 'center' }}>
             <Image 
               source={require('./assets/splash.png')} 
-              style={styles.loginLogo}
+              style={[styles.loginLogo, { width: 100, height: 100 }]}
               resizeMode="contain"
             />
-            <View style={styles.loginSecureBadge}>
-              <Text style={styles.loginSecureText}>SECURE</Text>
-            </View>
-          </View>
-          
-          <Text style={[styles.loginTitle, isDarkMode && styles.textDark]}>Bloom Budget</Text>
-          <Text style={[styles.loginSubtitle, isDarkMode && styles.textMutedDark]}>
-            Your mindful wealth companion
-          </Text>
-          
-          <View style={[styles.loginWelcomeBanner, isDarkMode && styles.loginWelcomeBannerDark]}>
-            <Text style={styles.loginWelcomeText}>
-              {isRegistering ? 'Create your account' : 'Sign in to access your linked cards & budgets'}
+            <Text style={[styles.loginTitle, isDarkMode && styles.textDark, { marginTop: 32 }]}>Welcome back</Text>
+            <Text style={[styles.loginSubtitle, isDarkMode && styles.textMutedDark, { marginTop: 8 }]}>
+              {userName}
             </Text>
           </View>
-        </View>
 
-        {/* Login form */}
-        <View style={[styles.loginFormCard, isDarkMode && styles.loginFormCardDark]}>
-          <Text style={[styles.loginFormTitle, isDarkMode && styles.textDark]}>
-            {isRegistering ? 'Register' : 'Welcome Back'}
-          </Text>
-          
-          <View style={styles.loginInputContainer}>
-            <Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>EMAIL</Text>
+          <View style={[styles.loginFormCard, isDarkMode && styles.loginFormCardDark, { marginTop: 60 }]}>
+            <Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark, { textAlign: 'center' }]}>ENTER YOUR PIN</Text>
             <TextInput
-              style={[styles.loginInput, isDarkMode && styles.loginInputDark]}
-              value={loginEmail}
-              onChangeText={setLoginEmail}
-              placeholder="you@example.com"
+              style={[styles.loginInput, isDarkMode && styles.loginInputDark, { fontSize: 32, textAlign: 'center', letterSpacing: 16, marginTop: 16 }]}
+              value={enteredPin}
+              onChangeText={(text) => setEnteredPin(text.replace(/[^0-9]/g, '').slice(0, 4))}
+              placeholder="••••"
               placeholderTextColor={isDarkMode ? "#7a6f73" : "#8f6f73"}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoComplete="email"
-            />
-          </View>
-
-          <View style={styles.loginInputContainer}>
-            <Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>PASSWORD</Text>
-            <TextInput
-              style={[styles.loginInput, isDarkMode && styles.loginInputDark]}
-              value={loginPassword}
-              onChangeText={setLoginPassword}
-              placeholder="••••••••"
-              placeholderTextColor={isDarkMode ? "#7a6f73" : "#8f6f73"}
+              keyboardType="number-pad"
+              maxLength={4}
               secureTextEntry
-              autoCapitalize="none"
+              returnKeyType="done"
+              onSubmitEditing={handlePinEntry}
             />
-          </View>
 
-          <TouchableOpacity activeOpacity={0.8} onPress={handleLogin}>
-            <LinearGradient
-              colors={['#FF6B8B', '#FF4071']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.loginButton}
+            <TouchableOpacity 
+              activeOpacity={0.8} 
+              onPress={handlePinEntry} 
+              style={{ marginTop: 32 }}
+              disabled={enteredPin.length !== 4}
             >
-              <Text style={styles.loginButtonText}>
-                {isRegistering ? 'Create Account' : 'Sign In'}
-              </Text>
-            </LinearGradient>
-          </TouchableOpacity>
+              <LinearGradient
+                colors={enteredPin.length === 4 ? ['#FF6B8B', '#FF4071'] : ['#ccc', '#aaa']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.loginButton}
+              >
+                <Text style={styles.loginButtonText}>Unlock</Text>
+              </LinearGradient>
+            </TouchableOpacity>
 
-          {/* Divider */}
-          <View style={styles.loginDivider}>
-            <View style={[styles.loginDividerLine, isDarkMode && styles.loginDividerLineDark]} />
-            <Text style={[styles.loginDividerText, isDarkMode && styles.textMutedDark]}>OR</Text>
-            <View style={[styles.loginDividerLine, isDarkMode && styles.loginDividerLineDark]} />
-          </View>
-
-          {/* Social Login Buttons */}
-          <TouchableOpacity 
-            activeOpacity={0.8}
-            onPress={handleGoogleSignIn}
-            style={[styles.socialButton, isDarkMode && styles.socialButtonDark]}
-          >
-            <Text style={styles.socialButtonIcon}>G</Text>
-            <Text style={[styles.socialButtonText, isDarkMode && styles.textDark]}>Sign in with Google</Text>
-          </TouchableOpacity>
-
-          {/* Face ID / Fingerprint Button */}
-          <TouchableOpacity 
-            activeOpacity={0.8}
-            onPress={async () => {
-              const isSupported = await checkBiometricSupport();
-              if (isSupported) {
-                const result = await LocalAuthentication.authenticateAsync({
-                  promptMessage: 'Sign in with biometric',
-                  fallbackLabel: 'Use passcode',
-                });
-                if (result.success) {
-                  // Check if user has saved auth
-                  const authToken = await AsyncStorage.getItem('@bloom_auth_token');
-                  if (authToken) {
+            <TouchableOpacity 
+              activeOpacity={0.7} 
+              onPress={async () => {
+                const isSupported = await checkBiometricSupport();
+                const biometricEnabledStr = await AsyncStorage.getItem('biometricEnabled');
+                if (isSupported && biometricEnabledStr === 'true') {
+                  const result = await LocalAuthentication.authenticateAsync({
+                    promptMessage: 'Unlock Bloom Budget',
+                    fallbackLabel: 'Use PIN',
+                  });
+                  if (result.success) {
                     setIsAuthenticated(true);
-                    setShowLogin(false);
-                  } else {
-                    Alert.alert('No Account', 'Please sign in with email first');
+                    setShowPinEntry(false);
+                    setEnteredPin('');
                   }
                 }
-              } else {
-                Alert.alert('Not Available', 'Biometric authentication is not available on this device');
-              }
-            }}
-            style={[styles.socialButton, isDarkMode && styles.socialButtonDark]}
-          >
-            <Fingerprint size={20} color={isDarkMode ? "#e8d0d3" : "#5b4043"} />
-            <Text style={[styles.socialButtonText, isDarkMode && styles.textDark]}>Sign in with Face ID / Fingerprint</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity 
-            activeOpacity={0.7}
-            onPress={() => setIsRegistering(!isRegistering)}
-            style={styles.loginToggleButton}
-          >
-            <Text style={[styles.loginToggleText, isDarkMode && styles.textMutedDark]}>
-              {isRegistering ? 'Already have an account? ' : "Don't have an account? "}
-              <Text style={styles.loginToggleTextBold}>
-                {isRegistering ? 'Sign In' : 'Register'}
+              }}
+              style={{ marginTop: 24, alignItems: 'center' }}
+            >
+              <Fingerprint size={24} color={isDarkMode ? "#e8d0d3" : "#5b4043"} />
+              <Text style={[styles.loginToggleText, isDarkMode && styles.textMutedDark, { marginTop: 8 }]}>
+                Use Biometric
               </Text>
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </TouchableOpacity>
     </KeyboardAvoidingView>
   );
 
@@ -2290,9 +2622,15 @@ export default function App() {
     <View style={[styles.container, isDarkMode && styles.containerDark]}>
       <StatusBar style={isDarkMode ? "light" : "dark"} hidden={false} />
       
-      {/* Show login screen if not authenticated */}
-      {showLogin && !isAuthenticated ? (
-        renderLogin()
+      {/* Show setup screen for first-time users */}
+      {showSetup ? (
+        renderSetup()
+      ) : showPinEntry ? (
+        renderPinEntry()
+      ) : !isAuthenticated ? (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Text>Loading...</Text>
+        </View>
       ) : (
         <>
       {/* Onboarding */}
@@ -2391,7 +2729,7 @@ export default function App() {
       </TouchableOpacity>
 
       {/* Bottom Navigation */}
-      {isAuthenticated && !showLogin && (
+      {isAuthenticated && !showSetup && !showPinEntry && (
       <View style={[styles.bottomNav, isDarkMode && styles.bottomNavDark]}>
         <TouchableOpacity activeOpacity={1}
           style={[styles.navItem, currentScreen === 'dashboard' && styles.navItemActive, isDarkMode && currentScreen === 'dashboard' && styles.navItemActiveDark]}
